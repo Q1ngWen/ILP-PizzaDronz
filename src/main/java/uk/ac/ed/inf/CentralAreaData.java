@@ -50,8 +50,10 @@ public class CentralAreaData {
      * @return An instance of the {@link CentralAreaData}.
      */
     public static CentralAreaData getCentral_area_instance() {
-        if (central_area_instance == null) {
-            central_area_instance = new CentralAreaData();
+        synchronized (CentralAreaData.class) {
+            if (central_area_instance == null) {
+                central_area_instance = new CentralAreaData();
+            }
         }
         return central_area_instance;
     }

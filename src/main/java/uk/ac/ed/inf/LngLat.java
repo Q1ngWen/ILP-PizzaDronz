@@ -3,6 +3,7 @@ package uk.ac.ed.inf;
 /**
  * {@link LngLat} allows the drone to view its position using coordinates. The command helps manage any navigational
  * functions required by the drone to travel around Edinburgh.
+ *
  * @param lng The longitude, measured in degrees.
  * @param lat The latitude, measured in degrees.
  */
@@ -15,9 +16,9 @@ public record LngLat(double lng, double lat) {
      * that begins at the tested coordinate, and extends to infinity to the right side of the longitude (x-axis).
      * For each polygon segment, it checks if the line crosses it. If the total number of intersections is odd,
      * then the coordinate is within the central area, else, it is outside.
-     * @see <a href="https://www.engr.colostate.edu/~dga/documents/papers/point_in_polygon.pdf">Winding Number algorithm by Dan Sunday</a>.
      *
      * @return Returns true if a coordinate is within or on the bounds of the central area.
+     * @see <a href="https://www.engr.colostate.edu/~dga/documents/papers/point_in_polygon.pdf">Winding Number algorithm by Dan Sunday</a>.
      */
     public boolean inCentralArea() {
         // getting the central area corner coordinates
@@ -31,8 +32,8 @@ public record LngLat(double lng, double lat) {
         boolean result = false;
         for (int i = 0, j = coordinates.length - 1; i < coordinates.length; j = i++) {
             if ((coordinates[i].longitude() >= lng) != (coordinates[j].longitude() >= lng) &&
-                (lat <= (coordinates[j].latitude() - coordinates[i].latitude()) * (lng - coordinates[i].longitude()) /
-                (coordinates[j].longitude() - coordinates[i].longitude()) + coordinates[i].latitude())) {
+                    (lat <= (coordinates[j].latitude() - coordinates[i].latitude()) * (lng - coordinates[i].longitude()) /
+                            (coordinates[j].longitude() - coordinates[i].longitude()) + coordinates[i].latitude())) {
                 result = !result;
             }
         }
@@ -46,7 +47,7 @@ public record LngLat(double lng, double lat) {
     public double distanceTo(LngLat cood) {
         double distance = 0;
         try {
-            distance = Math.sqrt(Math.pow((lng - cood.lng),2) + Math.pow((lat - cood.lat),2));
+            distance = Math.sqrt(Math.pow((lng - cood.lng), 2) + Math.pow((lat - cood.lat), 2));
         } catch (Exception e) {
             e.printStackTrace();
         }
