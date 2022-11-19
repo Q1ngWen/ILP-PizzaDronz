@@ -12,16 +12,27 @@ public class mainTest {
 //        System.out.println(cood1.distanceTo(cood2));
 //        System.out.println(cood1.closeTo(cood2));
 //        System.out.println(cood1.nextPosition(CompassDirection.NORTH));
-////        printing central area coordinates
+////        --printing central area coordinates--
 //        for (int i = 0; i < centralAreas.length; i++) {
 //            System.out.println("Location: " + centralAreas[i].getName());
 //            System.out.println("(" + centralAreas[i].getLongitude() + ", " + centralAreas[i].getLatitude() + ")");
 //        }
 
-        Restaurant[] restaurants = Restaurant.getRestaurantFromRestServer(server);
-        for (int i = 0; i < restaurants.length; i++) {
-            System.out.println(restaurants[i].getName());
-            System.out.println(restaurants[i].getMenu());
+//        --printing list of all restaurants and respective menus--
+//        Restaurant[] restaurants = Restaurant.getRestaurantFromRestServer(server);
+//        for (int i = 0; i < restaurants.length; i++) {
+//            System.out.println(restaurants[i].getName());
+//            System.out.println(restaurants[i].getMenu());
+//        }
+
+        NoFlyZone[] noFlyZones = NoFlyZone.getNoFlyZones(server);
+        for (int i = 0; i < noFlyZones.length; i++) {
+            System.out.println(noFlyZones[i].getName());
+            LngLat[] coordinates = noFlyZones[i].getCoordinates();
+            for (int j = 0; j < coordinates.length; j++) {
+                System.out.println(coordinates[i].lng() + ", "+ coordinates[i].lat());
+            }
+            System.out.println();
         }
     }
 }
