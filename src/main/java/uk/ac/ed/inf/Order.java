@@ -51,7 +51,7 @@ public class Order {
 
         // extracting restaurants with their respective menus and menus with their respective item's prices
         for (int i = 0; i < restaurants.length; i++) {
-            Menu[] menuList = restaurants[i].getMenu();
+            MenuItem[] menuList = restaurants[i].getMenu();
             for (int j = 0; j < menuList.length; j++) {
                 restaurantMenuName.put(menuList[j].name().toLowerCase(), restaurants[i].getName().toLowerCase());
                 restaurantMenuPrice.put(menuList[j].name().toLowerCase(), menuList[j].priceInPence());

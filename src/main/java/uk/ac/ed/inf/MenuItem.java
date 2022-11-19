@@ -6,5 +6,5 @@ package uk.ac.ed.inf;
  * @param priceInPence Price of pizza for sale in pence.
  */
 
-public record Menu(String name, int priceInPence) {
+public record MenuItem(String name, int priceInPence) {
 }

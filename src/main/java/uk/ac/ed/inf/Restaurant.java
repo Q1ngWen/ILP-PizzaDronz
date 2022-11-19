@@ -13,7 +13,7 @@ public class Restaurant {
     private String name;
     private double longitude;
     private double latitude;
-    private Menu[] menu;
+    private MenuItem[] menu;
 
     /**
      * @param name The name of the restaurant.
@@ -22,7 +22,7 @@ public class Restaurant {
      * @param menu The menu with an array pizzas for sale in the restaurant.
      */
     public Restaurant(@JsonProperty("name") String name, @JsonProperty("longitude") double longitude,
-                      @JsonProperty("latitude") double latitude, @JsonProperty("menu") Menu[] menu) {
+                      @JsonProperty("latitude") double latitude, @JsonProperty("menu") MenuItem[] menu) {
         this.name = name;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -30,24 +30,25 @@ public class Restaurant {
     }
 
     /**
-     * @param serverBaseAddress The home page of the website (to fetch data from).
+     * @param server The home page of the website (to fetch data from).
      * @return Array of restaurants collaborating with the drone service.
      */
-    public static Restaurant[] getRestaurantFromRestServer(URL serverBaseAddress) {
+    public static Restaurant[] getRestaurantFromRestServer(RestClient server) {
         Restaurant[] restaurants = null;
         try {
-            restaurants = new ObjectMapper().readValue(
-                    new URL(serverBaseAddress + "restaurants/"), Restaurant[].class);
+            URL restaurantsUrl = new URL(server.getBaseUrl() + "restaurants");
+            restaurants = new ObjectMapper().readValue(restaurantsUrl, Restaurant[].class);
         } catch (Exception e) {
             e.printStackTrace();
+            System.exit(1);
         }
         return restaurants;
     }
 
     /**
-     * @return An array of {@link Menu} containing all items for sale.
+     * @return An array of {@link MenuItem} containing all items for sale.
      */
-    public Menu[] getMenu() {
+    public MenuItem[] getMenu() {
         return menu;
     }
 

@@ -20,20 +20,19 @@ public record LngLat(double lng, double lat) {
      * @return Returns true if a coordinate is within or on the bounds of the central area.
      * @see <a href="https://www.engr.colostate.edu/~dga/documents/papers/point_in_polygon.pdf">Winding Number algorithm by Dan Sunday</a>.
      */
-    public boolean inCentralArea() {
+    public boolean inCentralArea(RestClient server) {
         // getting the central area corner coordinates
-        CentralAreaData centralAreaData = CentralAreaData.getCentral_area_instance();
-        CentralDataResponse[] coordinates = centralAreaData.getCoordinates();
+        CentralArea[] centralAreas = new CentralArea().getCoordinates(server);
 
         // 1st condition: coordinate's longitude must be between the longitude values of all the segments coordinates,
         // as the horizontal line must then intersect the segment
         // 2nd condition:  the code first multiples then divides, so that small differences between coordinates (which
         // might result in 0 after the division) are supported
         boolean result = false;
-        for (int i = 0, j = coordinates.length - 1; i < coordinates.length; j = i++) {
-            if ((coordinates[i].longitude() >= lng) != (coordinates[j].longitude() >= lng) &&
-                    (lat <= (coordinates[j].latitude() - coordinates[i].latitude()) * (lng - coordinates[i].longitude()) /
-                            (coordinates[j].longitude() - coordinates[i].longitude()) + coordinates[i].latitude())) {
+        for (int i = 0, j = centralAreas.length - 1; i < centralAreas.length; j = i++) {
+            if ((centralAreas[i].getLongitude() >= lng) != (centralAreas[j].getLongitude() >= lng) &&
+                    (lat <= (centralAreas[j].getLatitude() - centralAreas[i].getLatitude()) * (lng - centralAreas[i].getLongitude()) /
+                            (centralAreas[j].getLongitude() - centralAreas[i].getLongitude()) + centralAreas[i].getLatitude())) {
                 result = !result;
             }
         }
@@ -117,4 +116,3 @@ public record LngLat(double lng, double lat) {
     }
 }
 
-// trial
