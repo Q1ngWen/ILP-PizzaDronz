@@ -20,7 +20,7 @@ public record LngLat(double lng, double lat) {
      * @return Returns true if a coordinate is within or on the bounds of the central area.
      * @see <a href="https://www.engr.colostate.edu/~dga/documents/papers/point_in_polygon.pdf">Winding Number algorithm by Dan Sunday</a>.
      */
-    public boolean inCentralArea(RestClient server) {
+    public boolean inArea(RestClient server) {
         // getting the central area corner coordinates
         CentralArea[] centralAreas = new CentralArea().getCoordinates(server);
 

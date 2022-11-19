@@ -12,7 +12,6 @@ public class CentralArea {
     private String name;
     private double longitude;
     private double latitude;
-    private CentralArea[] coordinates;
 
     public CentralArea() {
     }
@@ -25,17 +24,20 @@ public class CentralArea {
 
     // getters
     public CentralArea[] getCoordinates(RestClient server) {
-        try {
-            URL centralAreaUrl = new URL(server.getBaseUrl() + "/centralArea");
-            coordinates = new ObjectMapper().readValue(centralAreaUrl, CentralArea[].class);
-        } catch (MalformedURLException | StreamReadException e) {
-            e.printStackTrace();
-            System.exit(1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        CentralArea[] coordinates = null;
+        coordinates = (CentralArea[]) server.deserialize("centralArea", CentralArea[].class);
         return coordinates;
+//        try {
+//            URL centralAreaUrl = new URL(server.getBaseUrl() + "/centralArea");
+//            coordinates = new ObjectMapper().readValue(centralAreaUrl, CentralArea[].class);
+//        } catch (MalformedURLException | StreamReadException e) {
+//            e.printStackTrace();
+//            System.exit(1);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            System.exit(1);
+//        }
+//        return coordinates;
     }
 
     public double getLongitude() {

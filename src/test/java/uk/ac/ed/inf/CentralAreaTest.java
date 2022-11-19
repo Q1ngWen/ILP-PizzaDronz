@@ -6,7 +6,7 @@ public class CentralAreaTest extends TestCase {
 
     public void testGetCoordinates() {
         String baseUrl = "https://ilp-rest.azurewebsites.net/";
-        RestClient server = RestClient.getRestClientInstance(baseUrl);
+        RestClient server = new RestClient(baseUrl);
 
 
     }

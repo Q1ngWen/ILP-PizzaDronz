@@ -1,44 +1,79 @@
 package uk.ac.ed.inf;
 
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class RestClient {
+public class RestClient<T> {
 
     private static final String DEFAULT_ENDPOINT = "https://ilp-rest.azurewebsites.net/";
-    private static RestClient dataInstance = null;
-    private String baseUrl;
+    private static RestClient<RestClient> dataInstance = null;
+    private URL baseUrl;
 
-    public RestClient() {}
+    public RestClient(String baseUrl) {
+        try {
+            this.baseUrl = new URL(baseUrl);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-    public static RestClient getRestClientInstance(String baseUrl) {
-        synchronized (RestClient.class) {
-            if (dataInstance == null) {
-                dataInstance = new RestClient();
+    public <T> T deserialize(String endpoint, Class<T> tClass) {
+        URL finalUrl = null;
+        T response = null;
+
+        try {
+            if (baseUrl.toString() == "" || baseUrl == null) {
+                baseUrl = new URL(DEFAULT_ENDPOINT);
             }
+            if (!baseUrl.toString().endsWith("/")) {
+                baseUrl = new URL(baseUrl.toString() + "/");
+            }
+
+            finalUrl = new URL(baseUrl.toString() + endpoint);
+        } catch (MalformedURLException e) {
+            System.err.println("Url is invalid: " + baseUrl + endpoint);
         }
 
         try {
-            URL test = new URL(baseUrl + "test/hello world");
-            if (baseUrl == "" || baseUrl == null) {
-                baseUrl = DEFAULT_ENDPOINT;
-            }
-            if (!baseUrl.endsWith("/")){
-                baseUrl += "/";
-            }
-            dataInstance.baseUrl = baseUrl;
-        } catch (MalformedURLException e) {
+            response = new ObjectMapper().readValue(finalUrl, tClass);
+        } catch (IOException e) {
             e.printStackTrace();
-            System.exit(1);
         }
 
-        return dataInstance;
+        return response;
     }
 
     // getters
 
-    public String getBaseUrl() {
+    public URL getBaseUrl() {
         return baseUrl;
     }
+
+//    public static RestClient getRestClientInstance() throws MalformedURLException {
+//        synchronized (RestClient.class) {
+//            if (dataInstance == null) {
+//                dataInstance = new RestClient(baseUrl);
+//            }
+//        }
+//
+//        try {
+//            if (baseUrl == "" || baseUrl == null) {
+//                baseUrl = DEFAULT_ENDPOINT;
+//            }
+//            if (!baseUrl.endsWith("/")){
+//                baseUrl += "/";
+//            }
+//            dataInstance.baseUrl = baseUrl;
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//            System.exit(1);
+//        }
+//
+//        return dataInstance;
+//    }
 }

@@ -1,11 +1,9 @@
 package uk.ac.ed.inf;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.mapbox.geojson.*;
+import com.mapbox.geojson.*;
 
-import java.awt.*;
-import java.net.URL;
+import java.util.Arrays;
 
 public class NoFlyZone {
     private String name;
@@ -18,13 +16,7 @@ public class NoFlyZone {
 
     public static NoFlyZone[] getNoFlyZones(RestClient server) {
         NoFlyZone[] noFlyZones = null;
-        try {
-            URL noFlyZonesUrl = new URL(server.getBaseUrl() + "noFlyZones");
-            noFlyZones = new ObjectMapper().readValue(noFlyZonesUrl, NoFlyZone[].class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        noFlyZones = (NoFlyZone[]) server.deserialize("noFlyZones", NoFlyZone[].class);
         return noFlyZones;
     }
 
@@ -32,17 +24,12 @@ public class NoFlyZone {
         return name;
     }
 
-    public LngLat[] getCoordinates() {
-        LngLat[] result = new LngLat[coordinates.length];
+    public Polygon getCoordinates() {
+        Point[] result = new Point[coordinates.length];
         for (int i = 0; i < coordinates.length; i++) {
-            result[i] = new LngLat(coordinates[i][0], coordinates[i][1]);
+            result[i] = Point.fromLngLat(coordinates[i][0], coordinates[i][1]);
         }
-        return result;
-//        return Polygon.fromLngLats(result);
+//        return result;
+        return Polygon.fromLngLats(Arrays.asList(Arrays.asList(result)));
     }
-
-//    public Polygon test() {
-////        Point coordinate = Point.fromLngLat(-1,1);
-//
-//    }
 }

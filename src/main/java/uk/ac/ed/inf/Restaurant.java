@@ -35,14 +35,16 @@ public class Restaurant {
      */
     public static Restaurant[] getRestaurantFromRestServer(RestClient server) {
         Restaurant[] restaurants = null;
-        try {
-            URL restaurantsUrl = new URL(server.getBaseUrl() + "restaurants");
-            restaurants = new ObjectMapper().readValue(restaurantsUrl, Restaurant[].class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
+        restaurants = (Restaurant[])server.deserialize("restaurants", Restaurant[].class);
         return restaurants;
+//        try {
+//            URL restaurantsUrl = new URL(server.getBaseUrl() + "restaurants");
+//            restaurants = new ObjectMapper().readValue(restaurantsUrl, Restaurant[].class);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.exit(1);
+//        }
+//        return restaurants;
     }
 
     /**

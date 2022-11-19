@@ -8,7 +8,7 @@ import java.awt.*;
 public class RestaurantTest extends TestCase {
 
     private String baseUrl = "https://ilp-rest.azurewebsites.net/";
-    private RestClient server = RestClient.getRestClientInstance(baseUrl);
+    private RestClient server = new RestClient(baseUrl);
     private Restaurant[] restaurants;
     private MenuItem pizza1;
     private MenuItem pizza2;
