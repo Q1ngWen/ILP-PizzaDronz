@@ -2,6 +2,7 @@ uk\ac\ed\inf\MenuItem.class
 uk\ac\ed\inf\Order.class
 uk\ac\ed\inf\Drone.class
 uk\ac\ed\inf\RestClient.class
+uk\ac\ed\inf\FlightPath.class
 uk\ac\ed\inf\NoFlyZone.class
 uk\ac\ed\inf\LngLat$1.class
 uk\ac\ed\inf\Restaurant.class

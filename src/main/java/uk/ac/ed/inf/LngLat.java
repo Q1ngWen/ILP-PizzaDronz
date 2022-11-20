@@ -9,6 +9,8 @@ package uk.ac.ed.inf;
  */
 
 public record LngLat(double lng, double lat) {
+    private static int gScore;
+    private static int hScore;
 
     /**
      * The function calculates the bounds of a polygon (formed by the corner coordinates of the central area provided)
@@ -113,6 +115,28 @@ public record LngLat(double lng, double lat) {
             default:
                 return new LngLat(lng, lat);
         }
+    }
+
+    public int getfScore() {
+        return gScore + hScore;
+    }
+
+    public int getgScore(LngLat source) {
+        gScore = (int) distanceTo(source);
+        return gScore;
+    }
+
+    public int gethScore(LngLat goal) {
+        hScore = (int) distanceTo(goal);
+        return hScore;
+    }
+
+    public static void setgScore(int gScore) {
+        LngLat.gScore = gScore;
+    }
+
+    public static void sethScore(int hScore) {
+        LngLat.hScore = hScore;
     }
 }
 

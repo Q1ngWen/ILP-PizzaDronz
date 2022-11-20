@@ -1,12 +1,8 @@
 package uk.ac.ed.inf;
 
-public class Drone {
-    private LngLat coordinate;
-    private double powerLevel;
+import com.mapbox.geojson.Point;
 
-    public Drone(){
-
-    }
-
+public record Drone(LngLat coordinate, double moveCount) {
+    private static final double MAX_MOVES = 2000;
 
 }

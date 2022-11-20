@@ -4,8 +4,12 @@ import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.BufferedInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 public class RestClient<T> {
@@ -13,12 +17,16 @@ public class RestClient<T> {
     private static final String DEFAULT_ENDPOINT = "https://ilp-rest.azurewebsites.net/";
     private static RestClient<RestClient> dataInstance = null;
     private URL baseUrl;
+    private String urlInstance;
 
     public RestClient(String baseUrl) {
-        try {
-            this.baseUrl = new URL(baseUrl);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+        if (urlValidator(baseUrl)) {
+            try {
+                this.baseUrl = new URL(urlInstance);
+            } catch (MalformedURLException e) {
+                System.err.println("Url provided is invalid: " + baseUrl);
+                System.exit(2);
+            }
         }
     }
 
@@ -27,16 +35,12 @@ public class RestClient<T> {
         T response = null;
 
         try {
-            if (baseUrl.toString() == "" || baseUrl == null) {
-                baseUrl = new URL(DEFAULT_ENDPOINT);
+            if (urlValidator(baseUrl.toString() + endpoint)) {
+                finalUrl = new URL(urlInstance);
             }
-            if (!baseUrl.toString().endsWith("/")) {
-                baseUrl = new URL(baseUrl.toString() + "/");
-            }
-
-            finalUrl = new URL(baseUrl.toString() + endpoint);
         } catch (MalformedURLException e) {
-            System.err.println("Url is invalid: " + baseUrl + endpoint);
+            System.err.println("Url is invalid: " + urlInstance);
+            System.exit(2);
         }
 
         try {
@@ -46,6 +50,49 @@ public class RestClient<T> {
         }
 
         return response;
+    }
+
+    public void download(String endpoint, String filename) {
+        URL finalUrl = null;
+
+        try {
+            if (urlValidator(baseUrl.toString() + endpoint)) {
+                finalUrl = new URL(urlInstance);
+            }
+        } catch (MalformedURLException e) {
+            System.err.println("URL is invalid: " + urlInstance);
+            System.exit(2);
+        }
+
+        try (BufferedInputStream in = new BufferedInputStream(finalUrl.openStream());
+                FileOutputStream fileOutputStream =
+                    new FileOutputStream(endpoint, false)) {
+            byte[] dataBuffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+                fileOutputStream.write(dataBuffer, 0, bytesRead);
+            }
+
+            System.out.println("File was written: " + endpoint);
+        } catch (IOException e) {
+            System.err.format("Error loading file: %s from %s -> %s", endpoint, finalUrl, e);
+        }
+    }
+
+    private boolean urlValidator(String url){
+        try {
+            new URL(url).toURI();
+            if (url == "" || url == null) {
+                url = DEFAULT_ENDPOINT;
+            }
+            if (!url.endsWith("/")) {
+                url += "/";
+            }
+            urlInstance = url;
+            return true;
+        } catch (MalformedURLException | URISyntaxException e) {
+            return false;
+        }
     }
 
     // getters

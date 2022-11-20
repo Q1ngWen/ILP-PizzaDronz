@@ -26,15 +26,18 @@ public class mainTest {
 //            System.out.println(restaurants[i].getMenu());
 //        }
 
-        NoFlyZone[] noFlyZones = NoFlyZone.getNoFlyZones(server);
-        for (int i = 0; i < noFlyZones.length; i++) {
-            System.out.println(noFlyZones[i].getName());
-            Polygon coordinates = noFlyZones[i].getCoordinates();
-            System.out.println(coordinates.coordinates());
-//            for (int j = 0; j < coordinates.; j++) {
-//                System.out.println(coordinates[i].lng() + ", "+ coordinates[i].lat());
-//            }
-            System.out.println();
-        }
+//        NoFlyZone[] noFlyZones = NoFlyZone.getNoFlyZones(server);
+//        for (int i = 0; i < noFlyZones.length; i++) {
+//            System.out.println(noFlyZones[i].getName());
+//            Polygon coordinates = noFlyZones[i].getCoordinates();
+//            System.out.println(coordinates.coordinates());
+////            for (int j = 0; j < coordinates.; j++) {
+////                System.out.println(coordinates[i].lng() + ", "+ coordinates[i].lat());
+////            }
+//            System.out.println();
+//        }
+
+        FlightPath flightPath = new FlightPath();
+        System.out.println(flightPath.generateFlightPath(server));
     }
 }
