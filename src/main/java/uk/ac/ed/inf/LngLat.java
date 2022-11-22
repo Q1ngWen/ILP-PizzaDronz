@@ -9,8 +9,7 @@ package uk.ac.ed.inf;
  */
 
 public record LngLat(double lng, double lat) {
-    private static int gScore;
-    private static int hScore;
+    private static final double MOVE_DISTANCE = 0.00015;
 
     /**
      * The function calculates the bounds of a polygon (formed by the corner coordinates of the central area provided)
@@ -74,69 +73,8 @@ public record LngLat(double lng, double lat) {
      * @return The new coordinate after travelling in the given direction.
      */
     public LngLat nextPosition(CompassDirection direction) {
-        // calculating all longitude and latitude distances to be added after travelling in given direction
-        double angle_22_5_sin = 0.00015 * Math.sin(Math.PI / 8);
-        double angle_22_5_cos = 0.00015 * Math.cos(Math.PI / 8);
-        double angle_45 = 0.00015 * Math.sin(Math.PI / 4);
-
-        switch (direction) {
-            case NORTH:
-                return new LngLat(lng, lat + 0.00015);
-            case SOUTH:
-                return new LngLat(lng, lat - 0.00015);
-            case EAST:
-                return new LngLat(lng + 0.00015, lat);
-            case WEST:
-                return new LngLat(lng - 0.00015, lat);
-            case NORTH_EAST:
-                return new LngLat(lng + angle_45, lat + angle_45);
-            case SOUTH_EAST:
-                return new LngLat(lng + angle_45, lat - angle_45);
-            case SOUTH_WEST:
-                return new LngLat(lng - angle_45, lat - angle_45);
-            case NORTH_WEST:
-                return new LngLat(lng - angle_45, lat + angle_45);
-            case NORTH_NORTH_EAST:
-                return new LngLat(lng + angle_22_5_sin, lat + angle_22_5_cos);
-            case EAST_NORTH_EAST:
-                return new LngLat(lng + angle_22_5_cos, lat + angle_22_5_sin);
-            case EAST_SOUTH_EAST:
-                return new LngLat(lng + angle_22_5_cos, lat - angle_22_5_sin);
-            case SOUTH_SOUTH_EAST:
-                return new LngLat(lng + angle_22_5_sin, lat - angle_22_5_cos);
-            case SOUTH_SOUTH_WEST:
-                return new LngLat(lng - angle_22_5_sin, lat - angle_22_5_cos);
-            case WEST_SOUTH_WEST:
-                return new LngLat(lng - angle_22_5_cos, lat - angle_22_5_sin);
-            case WEST_NORTH_WEST:
-                return new LngLat(lng - angle_22_5_cos, lat + angle_22_5_sin);
-            case NORTH_NORTH_WEST:
-                return new LngLat(lng - angle_22_5_sin, lat + angle_22_5_cos);
-            default:
-                return new LngLat(lng, lat);
-        }
-    }
-
-    public int getfScore() {
-        return gScore + hScore;
-    }
-
-    public int getgScore(LngLat source) {
-        gScore = (int) distanceTo(source);
-        return gScore;
-    }
-
-    public int gethScore(LngLat goal) {
-        hScore = (int) distanceTo(goal);
-        return hScore;
-    }
-
-    public static void setgScore(int gScore) {
-        LngLat.gScore = gScore;
-    }
-
-    public static void sethScore(int hScore) {
-        LngLat.hScore = hScore;
+        return new LngLat(this.lng + MOVE_DISTANCE * Math.cos(direction.getAngle()),
+                this.lat + MOVE_DISTANCE * Math.sin(direction.getAngle()));
     }
 }
 

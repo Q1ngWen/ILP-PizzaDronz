@@ -1,6 +1,9 @@
 package uk.ac.ed.inf;
 
 import com.mapbox.geojson.*;
+
+import java.util.List;
+
 public class mainTest {
     public static void main(String[] args){
         String baseUrl = "https://ilp-rest.azurewebsites.net/";
@@ -38,6 +41,18 @@ public class mainTest {
 //        }
 
         FlightPath flightPath = new FlightPath();
-        System.out.println(flightPath.generateFlightPath(server));
+        LngLat startPoint = new LngLat(-3.1838572025299072, 55.94449876875712);
+        LngLat endPoint = new LngLat(-3.186874, 55.944494);
+        PathNode source = new PathNode(startPoint);
+        PathNode goal = new PathNode(endPoint);
+        Drone drone = new Drone(source.getValue(), 0);
+        PathNode position = flightPath.AStarSearch(server, source, goal);
+        System.out.println(goal.getParent());
+        List<PathNode> path = FlightPath.getPath(position);
+        System.out.println(path.size());
+        for (int i = 0; i < path.size(); i++) {
+            System.out.println(path.get(i).getValue());
+        }
+//        System.out.println(flightPath.generateFlightPath(server));
     }
 }
