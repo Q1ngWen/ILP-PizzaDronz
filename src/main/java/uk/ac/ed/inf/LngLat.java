@@ -23,7 +23,7 @@ public record LngLat(double lng, double lat) {
      */
     public boolean inArea(RestClient server) {
         // getting the central area corner coordinates
-        CentralArea[] centralAreas = new CentralArea().getCoordinates(server);
+        CentralArea[] centralAreas = new CentralArea().getCoordinates();
 
         // 1st condition: coordinate's longitude must be between the longitude values of all the segments coordinates,
         // as the horizontal line must then intersect the segment

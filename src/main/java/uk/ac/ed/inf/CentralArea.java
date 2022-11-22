@@ -12,6 +12,7 @@ public class CentralArea {
     private String name;
     private double longitude;
     private double latitude;
+    private CentralArea[] coordinates;
 
     public CentralArea() {
     }
@@ -22,10 +23,12 @@ public class CentralArea {
         this.latitude = latitude;
     }
 
-    // getters
-    public CentralArea[] getCoordinates(RestClient server) {
-        CentralArea[] coordinates = null;
+    public void setCoordinates(RestClient server) {
         coordinates = (CentralArea[]) server.deserialize("centralArea", CentralArea[].class);
+    }
+
+    // getters
+    public CentralArea[] getCoordinates() {
         return coordinates;
 //        try {
 //            URL centralAreaUrl = new URL(server.getBaseUrl() + "/centralArea");

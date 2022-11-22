@@ -1,9 +1,5 @@
 package uk.ac.ed.inf;
 
-import com.mapbox.geojson.Feature;
-import com.mapbox.geojson.FeatureCollection;
-import com.mapbox.geojson.Point;
-
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -67,15 +63,15 @@ public class FlightPath {
             explored.add(current);
             System.out.println(current);
             System.out.println(current.getValue());
-            System.out.println("is the goal reached? " + found);
 
             // goal found
             if (current.getValue().closeTo(goal.getValue())) {
                 found = true;
-                System.out.println("goal reached :D");
+                System.out.println("YAYYYYYYYYYYYYYYY goal reached :D");
                 result = current;
                 break;
             }
+            System.out.println("is the goal reached? NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 
             //get all possible moves for current node
 //            CompassDirection[] possibleMoves = current.getPossibleMoves(POSSIBLE_MOVES, server);
@@ -85,16 +81,13 @@ public class FlightPath {
             for (CompassDirection d : POSSIBLE_MOVES) {
                 PathNode next = new PathNode(current.getValue().nextPosition(d));
 //                System.out.println(d);
-//                System.out.println("current g score: " + current.getgScore());
+//                System.out.println(next);
+//                System.out.println(next.getValue());
                 next.sethScore(goal.getValue());
                 double tempGScore = current.getgScore() + MOVE_DISTANCE;
                 double tempFScore = tempGScore + next.gethScore();
 
-
-//                System.out.println("temp g score: " + tempGScore);
-//                System.out.println("temp f score: " + tempFScore);
-//                System.out.println(next.getfScore());
-
+//                System.out.println(queue);
                 // if the child node has been evaluated and the newer f score is higher, skip
                 if (explored.contains(next) && tempFScore >= next.getfScore()) {
                     continue;
@@ -103,7 +96,6 @@ public class FlightPath {
                 // else if child node is not in queue or newer f score is lower
                 else if (!queue.contains(next) || tempFScore < next.getfScore()) {
                     next.setPrevious(current);
-//                    System.out.println(next.getParent().getValue());
                     next.setgScore(tempGScore);
                     next.setfScore(tempFScore);
 
@@ -112,14 +104,10 @@ public class FlightPath {
                     }
 
                     queue.add(next);
-//                    System.out.println(next);
-//                    System.out.println(next.getValue());
-//                    System.out.println("next possible node f score: " + next.getfScore());
-//                    System.out.println("next possible node g score: " +next.getgScore());
-//                    System.out.println("next possible node h score: " +next.gethScore());
+
+//                    System.out.println(next.getfScore());
 //                    System.out.println(queue);
                 }
-
             }
         }
         return result;

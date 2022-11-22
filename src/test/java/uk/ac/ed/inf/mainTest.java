@@ -2,13 +2,14 @@ package uk.ac.ed.inf;
 
 import com.mapbox.geojson.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class mainTest {
     public static void main(String[] args){
         String baseUrl = "https://ilp-rest.azurewebsites.net/";
         RestClient server = new RestClient(baseUrl);
-        CentralArea[] centralAreas = new CentralArea().getCoordinates(server);
+        CentralArea[] centralAreas = new CentralArea().getCoordinates();
         LngLat cood1 = new LngLat(-3.192473, 55.946383);
         LngLat cood2 = new LngLat(-3.012837192, 55.9913912873);
 //        System.out.println(cood1.inCentralArea(server));
@@ -41,8 +42,9 @@ public class mainTest {
 //        }
 
         FlightPath flightPath = new FlightPath();
-        LngLat startPoint = new LngLat(-3.1838572025299072, 55.94449876875712);
-        LngLat endPoint = new LngLat(-3.186874, 55.944494);
+        LngLat startPoint = new LngLat(	-3.1940,55.9439);
+        LngLat endPoint = new LngLat(	-3.2025, 	55.9433);
+        LngLat appletonTower = new LngLat(-3.186874, 55.944494);
         PathNode source = new PathNode(startPoint);
         PathNode goal = new PathNode(endPoint);
         Drone drone = new Drone(source.getValue(), 0);
@@ -50,9 +52,25 @@ public class mainTest {
         System.out.println(goal.getParent());
         List<PathNode> path = FlightPath.getPath(position);
         System.out.println(path.size());
+        List<Point> finalPath = new ArrayList<Point>();
         for (int i = 0; i < path.size(); i++) {
-            System.out.println(path.get(i).getValue());
+            LngLat coordinate = path.get(i).getValue();
+            finalPath.add(Point.fromLngLat(coordinate.lng(), coordinate.lat()));
+//            System.out.println(path.get(i).getValue());
         }
-//        System.out.println(flightPath.generateFlightPath(server));
+
+        Point start = Point.fromLngLat(startPoint.lng(), startPoint.lat());
+        Point end = Point.fromLngLat(endPoint.lng(), endPoint.lat());
+        LineString linePath = LineString.fromLngLats(finalPath);
+        Geometry g1 = (Geometry) start;
+        Geometry g2 = (Geometry) end;
+        Geometry g3 = (Geometry) linePath;
+        Feature[] features = new Feature[3];
+        features[0] = Feature.fromGeometry(g1);
+        features[1] = Feature.fromGeometry(g2);
+        features[2] = Feature.fromGeometry(g3);
+        FeatureCollection fc = FeatureCollection.fromFeatures(features);
+        System.out.println(fc.toJson());
+
     }
 }
