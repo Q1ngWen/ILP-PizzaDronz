@@ -42,8 +42,8 @@ public class mainTest {
 //        }
 
         FlightPath flightPath = new FlightPath();
-        LngLat startPoint = new LngLat(	-3.1940,55.9439);
-        LngLat endPoint = new LngLat(	-3.2025, 	55.9433);
+        LngLat startPoint = new LngLat(	-3.1912869215011597,55.945535152517735);
+        LngLat endPoint = new LngLat(-3.202541470527649,55.943284737579376);
         LngLat appletonTower = new LngLat(-3.186874, 55.944494);
         PathNode source = new PathNode(startPoint);
         PathNode goal = new PathNode(endPoint);

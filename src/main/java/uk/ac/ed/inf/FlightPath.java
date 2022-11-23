@@ -39,9 +39,12 @@ public class FlightPath {
     }
 
     public PathNode AStarSearch(RestClient server, PathNode source, PathNode goal) {
-        Set<PathNode> explored = new HashSet<PathNode>();
+        Set<LngLat> explored = new HashSet<LngLat>();
+//        HashMap<LngLat, PathNode> explored = new HashMap<LngLat, PathNode>();
         PathNode result = null;
-        PriorityQueue<PathNode> queue = new PriorityQueue<PathNode>(new Comparator<PathNode>() {
+
+        Set<LngLat> lngLatsQueue = new HashSet<LngLat>();
+        PriorityQueue<PathNode> nodeQueue = new PriorityQueue<PathNode>(new Comparator<PathNode>() {
             @Override
             public int compare(PathNode node1, PathNode node2) {
                 if (node1.getfScore() > node2.getfScore()) {
@@ -54,13 +57,15 @@ public class FlightPath {
 
         // cost from start
         source.setgScore(0);
-        queue.add(source);
+        nodeQueue.add(source);
+        lngLatsQueue.add(source.getValue());
         boolean found = false; // replace with the isvalid function
 
-        while (!queue.isEmpty() && !found) {
+        while (!nodeQueue.isEmpty() && !found) {
             // the node is having the lowest f score value
-            PathNode current = queue.poll();
-            explored.add(current);
+            PathNode current = nodeQueue.poll();
+            lngLatsQueue.remove(current.getValue());
+            explored.add(current.getValue());
             System.out.println(current);
             System.out.println(current.getValue());
 
@@ -89,22 +94,23 @@ public class FlightPath {
 
 //                System.out.println(queue);
                 // if the child node has been evaluated and the newer f score is higher, skip
-                if (explored.contains(next) && tempFScore >= next.getfScore()) {
+                if (explored.contains(next.getValue()) && tempFScore >= next.getfScore()) {
                     continue;
                 }
 
                 // else if child node is not in queue or newer f score is lower
-                else if (!queue.contains(next) || tempFScore < next.getfScore()) {
+                else if (!lngLatsQueue.contains(next.getValue()) || tempFScore < next.getfScore()) {
                     next.setPrevious(current);
                     next.setgScore(tempGScore);
                     next.setfScore(tempFScore);
 
-                    if (queue.contains(next)) {
-                        queue.remove(next);
+                    if (lngLatsQueue.contains(next.getValue())) {
+                        nodeQueue.remove(next);
+                        lngLatsQueue.remove(next.getValue());
                     }
 
-                    queue.add(next);
-
+                    nodeQueue.add(next);
+                    lngLatsQueue.add(next.getValue());
 //                    System.out.println(next.getfScore());
 //                    System.out.println(queue);
                 }
