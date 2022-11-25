@@ -5,8 +5,6 @@ import java.util.*;
 import java.util.List;
 
 public class FlightPath {
-    private NoFlyZone noFlyZone;
-    private LngLat dropOffPoint;
     private final double MOVE_DISTANCE = 0.00015;
     private final CompassDirection[] POSSIBLE_MOVES = {
             CompassDirection.NORTH, CompassDirection.NORTH_NORTH_EAST, CompassDirection.NORTH_EAST, CompassDirection.EAST_NORTH_EAST,
@@ -14,7 +12,7 @@ public class FlightPath {
             CompassDirection.SOUTH, CompassDirection.SOUTH_SOUTH_WEST, CompassDirection.SOUTH_WEST, CompassDirection.WEST_SOUTH_WEST,
             CompassDirection.WEST, CompassDirection.WEST_NORTH_WEST, CompassDirection.NORTH_WEST, CompassDirection.NORTH_NORTH_WEST
     };
-//    private final Point APPLETON_TOWER = Point.fromLngLat(−3.186874, 55.944494);
+    private final LngLat APPLETON_TOWER = new LngLat(-3.186874, 55.944494);
 
     public FlightPath(){}
 
@@ -70,7 +68,8 @@ public class FlightPath {
             System.out.println(current.getValue());
 
             // goal found
-            if (current.getValue().closeTo(goal.getValue())) {
+//            if (isGoal(current, goal)) {
+            if (current.getValue().closeTo(goal.getValue())){
                 found = true;
                 System.out.println("YAYYYYYYYYYYYYYYY goal reached :D");
                 result = current;
@@ -118,4 +117,22 @@ public class FlightPath {
         }
         return result;
     }
+
+    // function to help check if the path has reached the goal location
+//    public boolean isGoal(PathNode current, PathNode goal) {
+//        if (goal.getValue().lng() == APPLETON_TOWER.lng() &&
+//                goal.getValue().lat() == APPLETON_TOWER.lat()) {
+//            //if the goal coordinate is appleton tower and we're currently close to Appleton,
+//            // return true, else false
+//            if (current.getValue().closeTo(APPLETON_TOWER)) {
+//                return true;
+//            } else return false;
+//        } else {
+//            // if the goal coordinate is restaurants, then return true if currently at that goal, else false
+//            if (current.getValue().lng() == goal.getValue().lng() &&
+//                    current.getValue().lat() == goal.getValue().lat()) {
+//                return true;
+//            } else return false;
+//        }
+//    }
 }

@@ -10,10 +10,10 @@ import java.net.URL;
  */
 
 public class Restaurant {
-    private String name;
-    private double longitude;
-    private double latitude;
-    private MenuItem[] menu;
+    private final String name;
+    private final double longitude;
+    private final double latitude;
+    private final MenuItem[] menu;
 
     /**
      * @param name The name of the restaurant.
