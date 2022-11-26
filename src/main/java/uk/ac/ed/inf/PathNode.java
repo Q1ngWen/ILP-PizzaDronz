@@ -55,20 +55,4 @@ public class PathNode {
         return parent;
     }
 
-    public CompassDirection[] getPossibleMoves(CompassDirection[] possibleMoves, RestClient server) {
-        ArrayList<CompassDirection> result = new ArrayList<CompassDirection>();
-        for (CompassDirection d : possibleMoves) {
-            if (isValidMove(server, d)) {
-                result.add(d);
-            }
-        }
-        return result.toArray(new CompassDirection[0]);
-    }
-
-    //helper functions
-    public boolean isValidMove(RestClient server, CompassDirection direction) {
-        if (value.nextPosition(direction).inArea(server)) {
-            return true;
-        } else return false;
-    }
 }

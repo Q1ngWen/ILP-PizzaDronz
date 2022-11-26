@@ -1,6 +1,5 @@
 package uk.ac.ed.inf;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
@@ -14,21 +13,15 @@ public class FlightPath {
     };
     private final LngLat APPLETON_TOWER = new LngLat(-3.186874, 55.944494);
 
-    public FlightPath(){}
+    public FlightPath() {
+    }
 
     public static List<PathNode> getPath(PathNode goal) {
         List<PathNode> path = new ArrayList<PathNode>();
-
-//        for (PathNode cood = goal; cood != null; cood = cood.getParent()){
-//            System.out.println(cood);
-//            System.out.println(cood.getValue());
-//            System.out.println(cood.getParent().getValue());
-//            path.add(cood);
-//        }
         PathNode node = goal;
         while (node != null) {
-            System.out.println(node);
-            System.out.println(node.getValue());
+//            System.out.println(node);
+//            System.out.println(node.getValue());
             path.add(node);
             node = node.getParent();
         }
@@ -36,7 +29,7 @@ public class FlightPath {
         return path;
     }
 
-    public PathNode AStarSearch(RestClient server, PathNode source, PathNode goal) {
+    public PathNode AStarSearch(NoFlyZone[] noFlyZones, PathNode source, PathNode goal) {
         Set<LngLat> explored = new HashSet<LngLat>();
 //        HashMap<LngLat, PathNode> explored = new HashMap<LngLat, PathNode>();
         PathNode result = null;
@@ -69,16 +62,13 @@ public class FlightPath {
 
             // goal found
 //            if (isGoal(current, goal)) {
-            if (current.getValue().closeTo(goal.getValue())){
+            if (current.getValue().closeTo(goal.getValue())) {
                 found = true;
                 System.out.println("YAYYYYYYYYYYYYYYY goal reached :D");
                 result = current;
                 break;
             }
             System.out.println("is the goal reached? NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-
-            //get all possible moves for current node
-//            CompassDirection[] possibleMoves = current.getPossibleMoves(POSSIBLE_MOVES, server);
 
 
             // check every child of current node
@@ -87,6 +77,12 @@ public class FlightPath {
 //                System.out.println(d);
 //                System.out.println(next);
 //                System.out.println(next.getValue());
+
+                // check if the next node and the path to next node is valid
+                if (!isNodeValid(noFlyZones, next) || !isPathValid(noFlyZones, current, next)){
+                    continue;
+                }
+
                 next.sethScore(goal.getValue());
                 double tempGScore = current.getgScore() + MOVE_DISTANCE;
                 double tempFScore = tempGScore + next.gethScore();
@@ -118,21 +114,29 @@ public class FlightPath {
         return result;
     }
 
-    // function to help check if the path has reached the goal location
-//    public boolean isGoal(PathNode current, PathNode goal) {
-//        if (goal.getValue().lng() == APPLETON_TOWER.lng() &&
-//                goal.getValue().lat() == APPLETON_TOWER.lat()) {
-//            //if the goal coordinate is appleton tower and we're currently close to Appleton,
-//            // return true, else false
-//            if (current.getValue().closeTo(APPLETON_TOWER)) {
-//                return true;
-//            } else return false;
-//        } else {
-//            // if the goal coordinate is restaurants, then return true if currently at that goal, else false
-//            if (current.getValue().lng() == goal.getValue().lng() &&
-//                    current.getValue().lat() == goal.getValue().lat()) {
-//                return true;
-//            } else return false;
-//        }
-//    }
+    // helper functions to help validate if paths and nodes are valid moves
+    // function that checks if the path intersects through no fly zones
+    public boolean isPathValid(NoFlyZone[] noFlyZones, PathNode current, PathNode next) {
+        for (int i = 0; i < noFlyZones.length; i++) {
+            LngLat[] coordinates = noFlyZones[i].getCoordinates();
+            for (int j = 0; j < coordinates.length-1; j++) {
+                if (current.getValue().isIntersecting(coordinates[j], coordinates[j+1],
+                        current.getValue(), next.getValue())) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // function that checks if the next node is in a no fly zone
+    public boolean isNodeValid(NoFlyZone[] noFlyZones, PathNode next) {
+        for (int i = 0; i < noFlyZones.length; i++) {
+            LngLat[] coordinates = noFlyZones[i].getCoordinates();
+            if (next.getValue().inArea(coordinates)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

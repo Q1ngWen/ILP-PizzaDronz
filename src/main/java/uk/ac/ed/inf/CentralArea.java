@@ -12,7 +12,8 @@ public class CentralArea {
     private String name;
     private double longitude;
     private double latitude;
-    private CentralArea[] coordinates;
+    private CentralArea[] centralAreas;
+    private LngLat[] coordinates;
 
     public CentralArea() {
     }
@@ -23,13 +24,23 @@ public class CentralArea {
         this.latitude = latitude;
     }
 
-    public void setCoordinates(RestClient server) {
-        coordinates = (CentralArea[]) server.deserialize("centralArea", CentralArea[].class);
+    public void setCentralAreaCoordinates(RestClient server) {
+        centralAreas = (CentralArea[]) server.deserialize("centralArea", CentralArea[].class);
+        coordinates = new LngLat[centralAreas.length];
+        for (int i = 0; i < centralAreas.length; i++) {
+            coordinates[i] = new LngLat(centralAreas[i].getLongitude(), centralAreas[i].getLatitude());
+        }
+    }
+
+    public CentralArea[] getCentralArea() {
+        return centralAreas;
     }
 
     // getters
-    public CentralArea[] getCoordinates() {
+    public LngLat[] getCoordinates() {
         return coordinates;
+    }
+
 //        try {
 //            URL centralAreaUrl = new URL(server.getBaseUrl() + "/centralArea");
 //            coordinates = new ObjectMapper().readValue(centralAreaUrl, CentralArea[].class);
@@ -41,7 +52,7 @@ public class CentralArea {
 //            System.exit(1);
 //        }
 //        return coordinates;
-    }
+
 
     public double getLongitude() {
         return longitude;

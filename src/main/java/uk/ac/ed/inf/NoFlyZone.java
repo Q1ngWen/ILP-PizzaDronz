@@ -24,12 +24,12 @@ public class NoFlyZone {
         return name;
     }
 
-    public Polygon getCoordinates() {
-        Point[] result = new Point[coordinates.length];
+    public LngLat[] getCoordinates() {
+        LngLat[] result = new LngLat[coordinates.length];
         for (int i = 0; i < coordinates.length; i++) {
-            result[i] = Point.fromLngLat(coordinates[i][0], coordinates[i][1]);
+            result[i] = new LngLat(coordinates[i][0], coordinates[i][1]);
         }
-//        return result;
-        return Polygon.fromLngLats(Arrays.asList(Arrays.asList(result)));
+        return result;
+//        return Polygon.fromLngLats(Arrays.asList(Arrays.asList(result)));
     }
 }

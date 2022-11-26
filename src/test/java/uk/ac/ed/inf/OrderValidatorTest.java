@@ -41,13 +41,14 @@ public class OrderValidatorTest extends TestCase {
         String validCardNum1 = "4012888888881881";
         String validCardNum2 = "5425233430109903";
         String invalidCardNum1 = "5555555555557462";
+        String invalidCardNum4 = "4111111111111114";
         String invalidCardNum2 = "4917484589897107";
         String invalidCardNum3 = "4607925006404153543";
         assertTrue(validator.isValidCardNumber(validCardNum1));
         assertTrue(validator.isValidCardNumber(validCardNum2));
 //        assertFalse(validator.isValidCardNumber(invalidCardNum1));
 //        assertFalse(validator.isValidCardNumber(invalidCardNum2));
-        assertFalse(validator.isValidCardNumber(invalidCardNum3));
+        assertFalse(validator.isValidCardNumber(invalidCardNum4));
     }
 
     public void testGetNonValidatedOrders() {
