@@ -1,5 +1,6 @@
 package uk.ac.ed.inf;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class OrderValidator {
     }
 
     public boolean isValidCardExpiry(String cardExpiryString, String orderDateString) {
-        if (cardExpiryString == null || orderDateString == null) {
+        if (cardExpiryString == null || !isValidDate(orderDateString)) {
             this.status = OrderOutcome.INVALID_EXPIRY_DATE;
             return false;
         }
@@ -167,10 +168,9 @@ public class OrderValidator {
         return this.nonValidatedOrders;
     }
 
-    public Order[] getAllValidOrders(Restaurant[] restaurants, Order[] orders) {
+    public Order[] getValidOrders(Restaurant[] restaurants, Order[] orders) {
         ArrayList<Order> validatedOrders = new ArrayList<>();
-        for (int i = 0; i < orders.length; i++) {
-            Order order = orders[i];
+        for (Order order : orders) {
             if (!isValidCardNumber(order.getCreditCardNumber())) {
                 System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
             }
@@ -194,14 +194,35 @@ public class OrderValidator {
         return validatedOrders.toArray(new Order[0]);
     }
 
-    public Order[] getSpecificDayValidOrders(Restaurant[] restaurants, String date) {
-        ArrayList<Order> validOrders = new ArrayList<>();
-
-        return validOrders.toArray(new Order[0]);
+    public Order[] getValidOrders(Restaurant[] restaurants, Order[] orders, String date) {
+        if (restaurants == null || !isValidDate(date)) {
+            System.err.println("Invalid list of restaurants or date provided.");
+            return null;
+        }
+        ArrayList<Order> nonValidatedFilteredOrders = new ArrayList<>();
+        LocalDate dateFilter = LocalDate.parse(date);
+        for (Order order : nonValidatedOrders) {
+            if (isValidDate(order.getOrderDate())) {
+                LocalDate orderDate = LocalDate.parse(order.getOrderDate());
+                if (orderDate.equals(dateFilter)) {
+                    nonValidatedFilteredOrders.add(order);
+                }
+            }
+        }
+        Order[] validFilteredOrders = nonValidatedFilteredOrders.toArray(new Order[0]);
+        return getValidOrders(restaurants, validFilteredOrders);
     }
 
-    public OrderOutcome getStatus() {
-        return status;
+    // helper function that validates and converts the format of a date to YYYY-MM-DD
+    public boolean isValidDate(String date) {
+        try {
+            LocalDate.parse(date);
+        } catch (Exception e) {
+            System.err.println("Date String provided is in the wrong format or invalid.");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     // helper function that converts a string of integers to an array of integers

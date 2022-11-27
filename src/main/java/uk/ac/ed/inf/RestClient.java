@@ -82,7 +82,7 @@ public class RestClient<T> {
     private boolean urlValidator(String url){
         try {
             new URL(url).toURI();
-            if (url == "" || url == null) {
+            if (url.equals("") || url == null) {
                 url = DEFAULT_ENDPOINT;
             }
             if (!url.endsWith("/")) {

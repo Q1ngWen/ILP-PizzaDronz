@@ -2,6 +2,7 @@ package uk.ac.ed.inf;
 
 import com.mapbox.geojson.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,9 +87,12 @@ public class mainTest {
 //        System.out.println(fc.toJson());
 
         // order validation
-        OrderValidator validator = new OrderValidator();
+//        OrderValidator validator = new OrderValidator();
 //        Order[] nonValidatedOrders = validator.getNonValidatedOrders(server);
 //        System.out.println(nonValidatedOrders.length);
-        validator.isValidCardExpiry("02/23", "02/23");
+//        validator.isValidCardExpiry("02/23", "02/23");
+        String test = "21-12-2022";
+        LocalDate date = LocalDate.parse(test);
+        System.out.println(date);
     }
 }

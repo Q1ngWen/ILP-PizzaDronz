@@ -153,6 +153,11 @@ public class OrderValidatorTest extends TestCase {
     }
 
     public void testGetSpecificDayValidOrders() {
+        Order[] result = validator.getValidOrders(restaurants, nonValidatedOrders, "2023-01-02");
+        for (int i = 0; i < result.length; i++) {
+            System.out.println(result[i].getOrderNo());
+            System.out.println(result[i].getOrderDate());
+        }
     }
 
     public void testTestGetStatus() {

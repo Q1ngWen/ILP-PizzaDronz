@@ -19,6 +19,7 @@ public class Order {
     private final String cvv;
     private final int priceTotalInPence;
     private final String[] orderItems;
+    private OrderOutcome status;
 
     /**
      * @param orderNo The Unique alphanumeric {@link String} for each order made.
