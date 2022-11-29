@@ -18,7 +18,7 @@ public class Order {
     private final String cvv;
     private final int priceTotalInPence;
     private final String[] orderItems;
-    private OrderOutcome status;
+    private OrderOutcome outcome;
 
     /**
      * @param orderNo           The Unique alphanumeric {@link String} for each order made.
@@ -44,8 +44,8 @@ public class Order {
     }
 
     // setters
-    public void setStatus(OrderOutcome status) {
-        this.status = status;
+    public void setStatus(OrderOutcome outcome) {
+        this.outcome = outcome;
     }
 
     // getters
@@ -67,8 +67,8 @@ public class Order {
         return null;
     }
 
-    public OrderOutcome getStatus() {
-        return status;
+    public OrderOutcome getOutcome() {
+        return outcome;
     }
 
     public String getOrderNo() {

@@ -9,16 +9,31 @@ import java.util.*;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class OrderValidator {
-    private Order[] nonValidatedOrders;
+    private ArrayList<Order> orders;
     private OrderOutcome status;
 
     private Map<String, Restaurant> restaurantMenuName;
     private Map<String, Integer> restaurantMenuPrice;
 
 
-    public OrderValidator() {
+    public OrderValidator(Restaurant[] restaurants) {
+        if (restaurants == null) this.status = OrderOutcome.INVALID;
+
+        restaurantMenuName = new HashMap<>();
+        restaurantMenuPrice = new HashMap<>();
+
+        // extracting restaurants with their respective menus and menus with their respective item's prices
+        for (Restaurant restaurant : restaurants) {
+            MenuItem[] menuList = restaurant.getMenu();
+            for (MenuItem menuItem : menuList) {
+                restaurantMenuName.put(menuItem.name().toLowerCase(), restaurant);
+                restaurantMenuPrice.put(menuItem.name().toLowerCase(), menuItem.priceInPence());
+            }
+        }
     }
 
     public boolean isValidCardNumber(String cardNumString) {
@@ -164,81 +179,76 @@ public class OrderValidator {
         return true;
     }
 
-    // maybe want to merge non validated orders into get valid orders
-    public Order[] getNonValidatedOrders(RestClient server) {
-        Order[] orders = null;
-        orders = (Order[]) server.deserialize("orders", Order[].class);
-        this.nonValidatedOrders = orders;
-        return this.nonValidatedOrders;
+    public List<Order> getOrders(RestClient server) {
+        Order[] temp = null;
+        temp = (Order[]) server.deserialize("orders", Order[].class);
+        orders = Stream.of(temp).collect(Collectors.toCollection(ArrayList::new));
+        return this.orders;
     }
 
-    public Order[] getNonValidatedOrders(RestClient server, String date) {
+    public List<Order> getOrders(RestClient server, String date) {
         if (!isValidDate(date)) {
             return null;
         }
-        Order[] orders = null;
-        orders = (Order[]) server.deserialize("orders/" + date, Order[].class);
-        this.nonValidatedOrders = orders;
-        return this.nonValidatedOrders;
+        Order[] temp = null;
+        temp = (Order[]) server.deserialize("orders", Order[].class);
+        orders = Stream.of(temp).collect(Collectors.toCollection(ArrayList::new));
+        return this.orders;
     }
 
-    public Order[] getValidOrders(Restaurant[] restaurants, Order[] orders) {
-        ArrayList<Order> validatedOrders = new ArrayList<>();
-        for (Order order : orders) {
-            if (!isValidCardNumber(order.getCreditCardNumber())) {
-                order.setStatus(OrderOutcome.INVALID_CARD_NUMBER);
-                System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
-                continue;
-            }
-            if (!isValidCardExpiry(order.getCreditCardExpiry(), order.getOrderDate())) {
-                order.setStatus(OrderOutcome.INVALID_EXPIRY_DATE);
-                System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
-                continue;
-            }
-            if (!isValidCvv(order.getCvv())) {
-                order.setStatus(OrderOutcome.INVALID_CVV);
-                System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
-                continue;
-            }
-            if (!isValidPizzaCount(order.getOrderItems())) {
-                order.setStatus(OrderOutcome.INVALID_PIZZA_COUNT);
-                System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
-                continue;
-            }
-            if (!isValidPizzaItem(order.getOrderItems())) {
-                order.setStatus(OrderOutcome.INVALID_PIZZA_NOT_DEFINED);
-                System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
-                continue;
-            }
-            if (!isValidPizzaCombination(order.getOrderItems(), restaurants)) {
-                order.setStatus(OrderOutcome.INVALID_PIZZA_COMBINATION_MULTIPLE_SUPPLIERS);
-                System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
-                continue;
-            }
-            order.setStatus(OrderOutcome.VALID_BUT_NOT_DELIVERED);
-            validatedOrders.add(order);
+    public boolean isValidOrder(Restaurant[] restaurants, Order order) {
+        if (!isValidCardNumber(order.getCreditCardNumber())) {
+            order.setStatus(OrderOutcome.INVALID_CARD_NUMBER);
+            System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+            return false;
         }
-        return validatedOrders.toArray(new Order[0]);
+        if (!isValidCardExpiry(order.getCreditCardExpiry(), order.getOrderDate())) {
+            order.setStatus(OrderOutcome.INVALID_EXPIRY_DATE);
+            System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+            return false;
+        }
+        if (!isValidCvv(order.getCvv())) {
+            order.setStatus(OrderOutcome.INVALID_CVV);
+            System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+            return false;
+        }
+        if (!isValidPizzaCount(order.getOrderItems())) {
+            order.setStatus(OrderOutcome.INVALID_PIZZA_COUNT);
+            System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+            return false;
+        }
+        if (!isValidPizzaItem(order.getOrderItems())) {
+            order.setStatus(OrderOutcome.INVALID_PIZZA_NOT_DEFINED);
+            System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+            return false;
+        }
+        if (!isValidPizzaCombination(order.getOrderItems(), restaurants)) {
+            order.setStatus(OrderOutcome.INVALID_PIZZA_COMBINATION_MULTIPLE_SUPPLIERS);
+            System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+            return false;
+        }
+        order.setStatus(OrderOutcome.VALID_BUT_NOT_DELIVERED);
+        return true;
     }
 
-    public Order[] getValidOrders(Restaurant[] restaurants, Order[] orders, String date) {
-        if (restaurants == null || !isValidDate(date)) {
-            System.err.println("Invalid list of restaurants or date provided.");
-            return null;
-        }
-        ArrayList<Order> nonValidatedFilteredOrders = new ArrayList<>();
-        LocalDate dateFilter = LocalDate.parse(date);
-        for (Order order : orders) {
-            if (isValidDate(order.getOrderDate())) {
-                LocalDate orderDate = LocalDate.parse(order.getOrderDate());
-                if (orderDate.equals(dateFilter)) {
-                    nonValidatedFilteredOrders.add(order);
-                }
-            }
-        }
-        Order[] validFilteredOrders = nonValidatedFilteredOrders.toArray(new Order[0]);
-        return getValidOrders(restaurants, validFilteredOrders);
-    }
+//    public Order[] getValidOrders(Restaurant[] restaurants, Order[] orders, String date) {
+//        if (restaurants == null || !isValidDate(date)) {
+//            System.err.println("Invalid list of restaurants or date provided.");
+//            return null;
+//        }
+//        ArrayList<Order> nonValidatedFilteredOrders = new ArrayList<>();
+//        LocalDate dateFilter = LocalDate.parse(date);
+//        for (Order order : orders) {
+//            if (isValidDate(order.getOrderDate())) {
+//                LocalDate orderDate = LocalDate.parse(order.getOrderDate());
+//                if (orderDate.equals(dateFilter)) {
+//                    nonValidatedFilteredOrders.add(order);
+//                }
+//            }
+//        }
+//        Order[] validFilteredOrders = nonValidatedFilteredOrders.toArray(new Order[0]);
+//        return getValidOrders(restaurants, validFilteredOrders);
+//    }
 
     // helper function that validates and converts the format of a date to YYYY-MM-DD
     public boolean isValidDate(String date) {
@@ -262,22 +272,6 @@ public class OrderValidator {
             result[i] = Integer.parseInt(String.valueOf(s.charAt(i)));
         }
         return result;
-    }
-
-    public void setUpValidator(Restaurant[] restaurants) {
-        if (restaurants == null) this.status = OrderOutcome.INVALID;
-
-        restaurantMenuName = new HashMap<>();
-        restaurantMenuPrice = new HashMap<>();
-
-        // extracting restaurants with their respective menus and menus with their respective item's prices
-        for (Restaurant restaurant : restaurants) {
-            MenuItem[] menuList = restaurant.getMenu();
-            for (MenuItem menuItem : menuList) {
-                restaurantMenuName.put(menuItem.name().toLowerCase(), restaurant);
-                restaurantMenuPrice.put(menuItem.name().toLowerCase(), menuItem.priceInPence());
-            }
-        }
     }
 
     // helper function that checks for the restaurant of the order

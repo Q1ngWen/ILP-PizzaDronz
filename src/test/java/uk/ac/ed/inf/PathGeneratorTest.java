@@ -8,13 +8,13 @@ import uk.ac.ed.inf.DronePath.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FlightPathTest extends TestCase {
+public class PathGeneratorTest extends TestCase {
     private LngLat domino;
     private LngLat civerinos;
     private LngLat vegan;
     private LngLat sodeberg;
     private NoFlyZone[] noFlyZones;
-    private FlightPath flightPath;
+    private PathGenerator pathGenerator;
     private LngLat appletonTower;
     private PathNode source;
     private PathNode goal;
@@ -28,7 +28,7 @@ public class FlightPathTest extends TestCase {
         noFlyZones = NoFlyZone.getNoFlyZones(server);
         centralArea = new CentralArea();
         centralArea.setCentralAreaCoordinates(server);
-        flightPath = new FlightPath();
+        pathGenerator = new PathGenerator();
         domino = new LngLat(-3.1838572025299072, 55.94449876875712);
         civerinos = new LngLat(	-3.1912869215011597,55.945535152517735);
         vegan = new LngLat(-3.202541470527649, 55.943284737579376);
@@ -36,11 +36,11 @@ public class FlightPathTest extends TestCase {
         appletonTower = new LngLat(-3.186874, 55.944494);
         source = new PathNode(appletonTower);
         goal = new PathNode(vegan);
-        restaurant = flightPath.AStarSearch(noFlyZones, centralArea, source, goal);
+        restaurant = pathGenerator.AStarSearch(noFlyZones, centralArea, source, goal);
     }
 
     public void testGetPathToAppleton() {
-        List<PathNode> path = flightPath.getFlightPath(restaurant);
+        List<PathNode> path = pathGenerator.getFlightPath(restaurant);
         List<Point> finalPath = new ArrayList<>();
         for (int i = 0; i < path.size(); i++) {
             LngLat coordinate = path.get(i).getValue();

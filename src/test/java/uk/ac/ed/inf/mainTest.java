@@ -52,7 +52,7 @@ public class mainTest {
 //        }
 
 //      -- generating a flight path --
-//        FlightPath flightPath = new FlightPath();
+//        PathGenerator flightPath = new PathGenerator();
 //        LngLat domino = new LngLat(-3.1838572025299072, 55.94449876875712);
 //        LngLat civerinos = new LngLat(	-3.1912869215011597,55.945535152517735);
 //        LngLat endPoint = new LngLat(-3.202541470527649,55.943284737579376);
@@ -64,7 +64,7 @@ public class mainTest {
 //        Drone drone = new Drone(source.getValue(), 0);
 //        PathNode position = flightPath.AStarSearch(noFlyZones, source, goal);
 //        System.out.println(goal.getParent());
-//        List<PathNode> path = FlightPath.getPath(position);
+//        List<PathNode> path = PathGenerator.getPath(position);
 //        System.out.println(path.size());
 //        List<Point> finalPath = new ArrayList<Point>();
 //        for (int i = 0; i < path.size(); i++) {
