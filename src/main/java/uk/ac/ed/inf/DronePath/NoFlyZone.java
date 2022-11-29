@@ -1,9 +1,7 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.DronePath;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mapbox.geojson.*;
-
-import java.util.Arrays;
+import uk.ac.ed.inf.RestClient;
 
 public class NoFlyZone {
     private String name;

@@ -1,6 +1,8 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.Orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.ac.ed.inf.Restaurants.MenuItem;
+import uk.ac.ed.inf.Restaurants.Restaurant;
 
 import java.util.*;
 

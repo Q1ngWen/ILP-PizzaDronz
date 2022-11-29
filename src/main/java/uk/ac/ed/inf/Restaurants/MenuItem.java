@@ -1,4 +1,4 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.Restaurants;
 
 /**
  * Individual item for sale in a {@link Restaurant}.

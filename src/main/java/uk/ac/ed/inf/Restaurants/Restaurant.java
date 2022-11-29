@@ -1,9 +1,8 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.Restaurants;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.net.URL;
+import uk.ac.ed.inf.DronePath.LngLat;
+import uk.ac.ed.inf.RestClient;
 
 /**
  * {@link Restaurant} allows system to find location of the restaurant and its menus for users to view and order.

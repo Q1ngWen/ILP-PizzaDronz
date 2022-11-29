@@ -1,6 +1,7 @@
 package uk.ac.ed.inf;
 
 import junit.framework.TestCase;
+import uk.ac.ed.inf.DronePath.LngLat;
 
 public class LngLatTest extends TestCase {
 

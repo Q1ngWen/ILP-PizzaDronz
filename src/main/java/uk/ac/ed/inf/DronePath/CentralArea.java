@@ -1,12 +1,7 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.DronePath;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
+import uk.ac.ed.inf.RestClient;
 
 public class CentralArea {
     private String name;

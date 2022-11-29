@@ -1,4 +1,4 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.Orders;
 
 /**
  * {@link OrderOutcome} represents the status of the delivery after processing the order.

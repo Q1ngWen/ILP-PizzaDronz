@@ -1,8 +1,10 @@
 package uk.ac.ed.inf;
 
 import junit.framework.TestCase;
-import org.junit.Assert;
 import org.junit.Before;
+import uk.ac.ed.inf.Orders.Order;
+import uk.ac.ed.inf.Orders.OrderValidator;
+import uk.ac.ed.inf.Restaurants.Restaurant;
 
 public class OrderValidatorTest extends TestCase {
     private final String baseUrl = "https://ilp-rest.azurewebsites.net/";

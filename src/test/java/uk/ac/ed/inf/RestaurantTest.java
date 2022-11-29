@@ -2,22 +2,22 @@ package uk.ac.ed.inf;
 
 import junit.framework.TestCase;
 import org.junit.Before;
-
-import java.awt.*;
+import uk.ac.ed.inf.Restaurants.MenuItem;
+import uk.ac.ed.inf.Restaurants.Restaurant;
 
 public class RestaurantTest extends TestCase {
 
     private String baseUrl = "https://ilp-rest.azurewebsites.net/";
     private RestClient server = new RestClient(baseUrl);
     private Restaurant[] restaurants;
-    private MenuItem pizza1;
-    private MenuItem pizza2;
-    private MenuItem pizza3;
-    private MenuItem pizza4;
-    private MenuItem pizza5;
+    private uk.ac.ed.inf.Restaurants.MenuItem pizza1;
+    private uk.ac.ed.inf.Restaurants.MenuItem pizza2;
+    private uk.ac.ed.inf.Restaurants.MenuItem pizza3;
+    private uk.ac.ed.inf.Restaurants.MenuItem pizza4;
+    private uk.ac.ed.inf.Restaurants.MenuItem pizza5;
 
-    private MenuItem[] menu1;
-    private MenuItem[] menu2;
+    private uk.ac.ed.inf.Restaurants.MenuItem[] menu1;
+    private uk.ac.ed.inf.Restaurants.MenuItem[] menu2;
 
 
     @Before
@@ -25,13 +25,13 @@ public class RestaurantTest extends TestCase {
         assertNotNull(menu1);
         assertNotNull(menu2);
 
-        pizza1 = new MenuItem("Quad Cheese Deluxe", 1500);
-        pizza2 = new MenuItem("Hawaiian Delight", 1000);
-        pizza3 = new MenuItem("Barbeque Chicken", 1700);
-        pizza4 = new MenuItem("Margarita", 1000);
-        pizza5 = new MenuItem("Calzone", 1400);
+        pizza1 = new uk.ac.ed.inf.Restaurants.MenuItem("Quad Cheese Deluxe", 1500);
+        pizza2 = new uk.ac.ed.inf.Restaurants.MenuItem("Hawaiian Delight", 1000);
+        pizza3 = new uk.ac.ed.inf.Restaurants.MenuItem("Barbeque Chicken", 1700);
+        pizza4 = new uk.ac.ed.inf.Restaurants.MenuItem("Margarita", 1000);
+        pizza5 = new uk.ac.ed.inf.Restaurants.MenuItem("Calzone", 1400);
 
-        menu1 = new MenuItem[3];
+        menu1 = new uk.ac.ed.inf.Restaurants.MenuItem[3];
         menu1[0] = pizza1;
         menu1[1] = pizza2;
         menu1[2] = pizza3;

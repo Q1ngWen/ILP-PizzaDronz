@@ -1,7 +1,4 @@
-package uk.ac.ed.inf;
-
-import java.nio.file.Path;
-import java.util.ArrayList;
+package uk.ac.ed.inf.DronePath;
 
 public class PathNode {
     private final LngLat value;

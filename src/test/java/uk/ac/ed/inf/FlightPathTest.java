@@ -3,6 +3,7 @@ package uk.ac.ed.inf;
 import com.mapbox.geojson.*;
 import junit.framework.TestCase;
 import org.junit.Before;
+import uk.ac.ed.inf.DronePath.*;
 
 import java.util.ArrayList;
 import java.util.List;

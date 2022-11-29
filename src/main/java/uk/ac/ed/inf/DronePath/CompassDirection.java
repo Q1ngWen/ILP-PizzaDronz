@@ -1,4 +1,4 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.DronePath;
 
 /**
  * {@link CompassDirection} represents list of all 16 possible compass points the drone can navigate to.

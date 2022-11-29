@@ -2,10 +2,14 @@ package uk.ac.ed.inf;
 
 import com.mapbox.geojson.*;
 import junit.framework.TestCase;
+import uk.ac.ed.inf.DronePath.Drone;
+import uk.ac.ed.inf.DronePath.LngLat;
+import uk.ac.ed.inf.DronePath.PathNode;
+import uk.ac.ed.inf.Orders.Order;
+import uk.ac.ed.inf.Restaurants.Restaurant;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 public class DroneTest extends TestCase {
     private RestClient server = new RestClient<>("https://ilp-rest.azurewebsites.net/");

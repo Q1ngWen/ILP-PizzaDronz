@@ -1,4 +1,4 @@
-package uk.ac.ed.inf;
+package uk.ac.ed.inf.DronePath;
 
 /**
  * {@link LngLat} allows the drone to view its position using coordinates. The command helps manage any navigational
