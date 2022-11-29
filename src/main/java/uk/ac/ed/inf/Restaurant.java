@@ -60,4 +60,8 @@ public class Restaurant {
     public String getName() {
         return name;
     }
+
+    public LngLat getCoordinate() {
+        return new LngLat(longitude, latitude);
+    }
 }

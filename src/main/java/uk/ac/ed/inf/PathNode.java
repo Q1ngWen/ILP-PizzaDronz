@@ -1,5 +1,6 @@
 package uk.ac.ed.inf;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 
 public class PathNode {
@@ -7,7 +8,8 @@ public class PathNode {
     private double fScore;
     private double gScore;
     private double hScore;
-    private PathNode parent = null;
+    private PathNode previous = null;
+
 
     public PathNode(LngLat value) {
         this.value = value;
@@ -31,7 +33,7 @@ public class PathNode {
     }
 
     public void setPrevious(PathNode previous) {
-        this.parent = previous;
+        this.previous = previous;
     }
 
     // getters
@@ -51,8 +53,7 @@ public class PathNode {
         return hScore;
     }
 
-    public PathNode getParent() {
-        return parent;
+    public PathNode getPrevious() {
+        return previous;
     }
-
 }

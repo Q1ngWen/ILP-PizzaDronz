@@ -32,9 +32,6 @@ public class CentralArea {
         }
     }
 
-    public CentralArea[] getCentralArea() {
-        return centralAreas;
-    }
 
     // getters
     public LngLat[] getCoordinates() {

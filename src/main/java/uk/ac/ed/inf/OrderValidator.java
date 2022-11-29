@@ -11,7 +11,7 @@ public class OrderValidator {
     private Order[] nonValidatedOrders;
     private OrderOutcome status;
 
-    private Map<String, String> restaurantMenuName;
+    private Map<String, Restaurant> restaurantMenuName;
     private Map<String, Integer> restaurantMenuPrice;
 
 
@@ -127,7 +127,7 @@ public class OrderValidator {
         // checking for valid pizza combinations
         Set<String> restaurantValidation = new HashSet<>();
         for (String s : orderItems) {
-            restaurantValidation.add(restaurantMenuName.get(s.toLowerCase()));
+            restaurantValidation.add(restaurantMenuName.get(s.toLowerCase()).getName());
         }
         if (restaurantValidation.size() != 1) {
             this.status = OrderOutcome.INVALID_PIZZA_COMBINATION_MULTIPLE_SUPPLIERS;
@@ -161,9 +161,20 @@ public class OrderValidator {
         return true;
     }
 
+    // maybe want to merge non validated orders into get valid orders
     public Order[] getNonValidatedOrders(RestClient server) {
         Order[] orders = null;
         orders = (Order[]) server.deserialize("orders", Order[].class);
+        this.nonValidatedOrders = orders;
+        return this.nonValidatedOrders;
+    }
+
+    public Order[] getNonValidatedOrders(RestClient server, String date) {
+        if (!isValidDate(date)) {
+            return null;
+        }
+        Order[] orders = null;
+        orders = (Order[]) server.deserialize("orders/" + date, Order[].class);
         this.nonValidatedOrders = orders;
         return this.nonValidatedOrders;
     }
@@ -172,23 +183,36 @@ public class OrderValidator {
         ArrayList<Order> validatedOrders = new ArrayList<>();
         for (Order order : orders) {
             if (!isValidCardNumber(order.getCreditCardNumber())) {
+                order.setStatus(OrderOutcome.INVALID_CARD_NUMBER);
                 System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+                continue;
             }
             if (!isValidCardExpiry(order.getCreditCardExpiry(), order.getOrderDate())) {
+                order.setStatus(OrderOutcome.INVALID_EXPIRY_DATE);
                 System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+                continue;
             }
             if (!isValidCvv(order.getCvv())) {
+                order.setStatus(OrderOutcome.INVALID_CVV);
                 System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+                continue;
             }
             if (!isValidPizzaCount(order.getOrderItems())) {
+                order.setStatus(OrderOutcome.INVALID_PIZZA_COUNT);
                 System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+                continue;
             }
             if (!isValidPizzaItem(order.getOrderItems())) {
+                order.setStatus(OrderOutcome.INVALID_PIZZA_NOT_DEFINED);
                 System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+                continue;
             }
             if (!isValidPizzaCombination(order.getOrderItems(), restaurants)) {
+                order.setStatus(OrderOutcome.INVALID_PIZZA_COMBINATION_MULTIPLE_SUPPLIERS);
                 System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
+                continue;
             }
+            order.setStatus(OrderOutcome.VALID_BUT_NOT_DELIVERED);
             validatedOrders.add(order);
         }
         return validatedOrders.toArray(new Order[0]);
@@ -201,7 +225,7 @@ public class OrderValidator {
         }
         ArrayList<Order> nonValidatedFilteredOrders = new ArrayList<>();
         LocalDate dateFilter = LocalDate.parse(date);
-        for (Order order : nonValidatedOrders) {
+        for (Order order : orders) {
             if (isValidDate(order.getOrderDate())) {
                 LocalDate orderDate = LocalDate.parse(order.getOrderDate());
                 if (orderDate.equals(dateFilter)) {
@@ -247,9 +271,19 @@ public class OrderValidator {
         for (Restaurant restaurant : restaurants) {
             MenuItem[] menuList = restaurant.getMenu();
             for (MenuItem menuItem : menuList) {
-                restaurantMenuName.put(menuItem.name().toLowerCase(), restaurant.getName().toLowerCase());
+                restaurantMenuName.put(menuItem.name().toLowerCase(), restaurant);
                 restaurantMenuPrice.put(menuItem.name().toLowerCase(), menuItem.priceInPence());
             }
         }
+    }
+
+    // helper function that checks for the restaurant of the order
+    public Restaurant getOrdersRestaurant(String[] orderItems) {
+        for (String order : orderItems) {
+            if (restaurantMenuName.containsKey(order)) {
+                return restaurantMenuName.get(order);
+            }
+        }
+        return null;
     }
 }

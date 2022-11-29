@@ -11,25 +11,22 @@ public class FlightPath {
             CompassDirection.SOUTH, CompassDirection.SOUTH_SOUTH_WEST, CompassDirection.SOUTH_WEST, CompassDirection.WEST_SOUTH_WEST,
             CompassDirection.WEST, CompassDirection.WEST_NORTH_WEST, CompassDirection.NORTH_WEST, CompassDirection.NORTH_NORTH_WEST
     };
-    private final LngLat APPLETON_TOWER = new LngLat(-3.186874, 55.944494);
 
     public FlightPath() {
     }
 
-    public static List<PathNode> getPath(PathNode goal) {
+    public List<PathNode> getFlightPath(PathNode goal) {
         List<PathNode> path = new ArrayList<PathNode>();
         PathNode node = goal;
         while (node != null) {
-//            System.out.println(node);
-//            System.out.println(node.getValue());
             path.add(node);
-            node = node.getParent();
+            node = node.getPrevious();
         }
         Collections.reverse(path);
         return path;
     }
 
-    public PathNode AStarSearch(NoFlyZone[] noFlyZones, PathNode source, PathNode goal) {
+    public PathNode AStarSearch(NoFlyZone[] noFlyZones, CentralArea centralArea, PathNode source, PathNode goal) {
         Set<LngLat> explored = new HashSet<LngLat>();
 //        HashMap<LngLat, PathNode> explored = new HashMap<LngLat, PathNode>();
         PathNode result = null;
@@ -51,24 +48,25 @@ public class FlightPath {
         nodeQueue.add(source);
         lngLatsQueue.add(source.getValue());
         boolean found = false; // replace with the isvalid function
+        int intersectCentralAreaCount = 0;
 
         while (!nodeQueue.isEmpty() && !found) {
             // the node is having the lowest f score value
             PathNode current = nodeQueue.poll();
             lngLatsQueue.remove(current.getValue());
             explored.add(current.getValue());
-            System.out.println(current);
-            System.out.println(current.getValue());
+//            System.out.println(current);
+//            System.out.println(current.getValue());
 
             // goal found
 //            if (isGoal(current, goal)) {
             if (current.getValue().closeTo(goal.getValue())) {
                 found = true;
-                System.out.println("YAYYYYYYYYYYYYYYY goal reached :D");
+//                System.out.println("YAYYYYYYYYYYYYYYY goal reached :D");
                 result = current;
                 break;
             }
-            System.out.println("is the goal reached? NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+//            System.out.println("is the goal reached? NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 
 
             // check every child of current node
@@ -79,7 +77,9 @@ public class FlightPath {
 //                System.out.println(next.getValue());
 
                 // check if the next node and the path to next node is valid
-                if (!isNodeValid(noFlyZones, next) || !isPathValid(noFlyZones, current, next)){
+                int tempCentralAreaCount = isPathValid(centralArea, intersectCentralAreaCount, current, next);
+                if (!isNodeValid(noFlyZones, next) || !isPathValid(noFlyZones, current, next) ||
+                        tempCentralAreaCount + intersectCentralAreaCount > 1){
                     continue;
                 }
 
@@ -95,6 +95,7 @@ public class FlightPath {
 
                 // else if child node is not in queue or newer f score is lower
                 else if (!lngLatsQueue.contains(next.getValue()) || tempFScore < next.getfScore()) {
+                    intersectCentralAreaCount += tempCentralAreaCount;
                     next.setPrevious(current);
                     next.setgScore(tempGScore);
                     next.setfScore(tempFScore);
@@ -127,6 +128,25 @@ public class FlightPath {
             }
         }
         return true;
+    }
+
+    // function that checks if the path leaves the central area, and if so, checks
+    // if it re-enters the central area again
+    public int isPathValid(CentralArea centralArea, int intersectCentralAreaCount, PathNode current, PathNode next) {
+        LngLat[] coordinates = centralArea.getCoordinates();
+        int tempCount = 0;
+        for (int i = 0; i < coordinates.length; i++) {
+            if (i == coordinates.length-1) {
+                if (current.getValue().isIntersecting(coordinates[i], coordinates[0],
+                        current.getValue(), next.getValue())) {
+                    tempCount += 1;
+                }
+            } else if (current.getValue().isIntersecting(coordinates[i], coordinates[i+1],
+            current.getValue(), next.getValue())) {
+                tempCount += 1;
+            }
+        }
+        return tempCount;
     }
 
     // function that checks if the next node is in a no fly zone

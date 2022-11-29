@@ -57,9 +57,11 @@ public class mainTest {
 //        LngLat domino = new LngLat(-3.1838572025299072, 55.94449876875712);
 //        LngLat civerinos = new LngLat(	-3.1912869215011597,55.945535152517735);
 //        LngLat endPoint = new LngLat(-3.202541470527649,55.943284737579376);
-//        LngLat appletonTower = new LngLat(-3.186874, 55.944494);
-//        PathNode source = new PathNode(appletonTower);
-//        PathNode goal = new PathNode(civerinos);
+        LngLat appletonTower = new LngLat(-3.186874, 55.944494);
+        LngLat vegan = new LngLat(-3.202541470527649, 55.943284737579376);
+        LngLat sodeberg = new LngLat(-3.1940174102783203, 55.94390696616939);
+        PathNode source = new PathNode(appletonTower);
+        PathNode goal = new PathNode(vegan);
 //        Drone drone = new Drone(source.getValue(), 0);
 //        PathNode position = flightPath.AStarSearch(noFlyZones, source, goal);
 //        System.out.println(goal.getParent());
@@ -91,8 +93,25 @@ public class mainTest {
 //        Order[] nonValidatedOrders = validator.getNonValidatedOrders(server);
 //        System.out.println(nonValidatedOrders.length);
 //        validator.isValidCardExpiry("02/23", "02/23");
-        String test = "21-12-2022";
-        LocalDate date = LocalDate.parse(test);
-        System.out.println(date);
+//        String test = "21-12-2022";
+//        LocalDate date = LocalDate.parse(test);
+//        System.out.println(date);
+        Restaurant[] restaurants = Restaurant.getRestaurantFromRestServer(server);
+        String pizzaItem1 = "Super Cheese";
+        String pizzaItem3 = "Margarita";
+        String pizzaItem4 = "Calzone";
+
+        String[] pizzaOrder1 = {pizzaItem1};
+        String[] pizzaOrder2 = {pizzaItem3, pizzaItem4, pizzaItem3, pizzaItem4};
+
+        Order order1 = new Order("1AFFE082", "2023-01-01", "Gilberto Handshoe",
+                "2402902", "04/28", "922", 1500, pizzaOrder1);
+        Order order2 = new Order("12340B01", "2023-03-29", "Vernice Kaza",
+                "4355175523891417", "07/12", "550", 5300, pizzaOrder2);
+
+//        System.out.println(order1.getOrdersRestaurant(restaurants));
+//        System.out.println(order2.getOrdersRestaurant(restaurants));
+        System.out.println(appletonTower.distanceTo(sodeberg));
+        System.out.println(appletonTower.distanceTo(vegan));
     }
 }
