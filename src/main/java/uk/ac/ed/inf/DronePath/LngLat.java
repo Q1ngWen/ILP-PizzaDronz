@@ -63,8 +63,9 @@ public record LngLat(double lng, double lat) {
      * @return The new coordinate after travelling in the given direction.
      */
     public LngLat nextPosition(CompassDirection direction) {
-        return new LngLat(this.lng + MOVE_DISTANCE * Math.cos(direction.getAngle()),
-                this.lat + MOVE_DISTANCE * Math.sin(direction.getAngle()));
+        double angle = Math.toRadians(direction.getAngle());
+        return new LngLat(this.lng + MOVE_DISTANCE * Math.cos(angle),
+                this.lat + MOVE_DISTANCE * Math.sin(angle));
     }
 
     // function returns true if line segment p1q1 and p2q2 intersects

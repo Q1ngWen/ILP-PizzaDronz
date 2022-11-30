@@ -8,37 +8,42 @@ import uk.ac.ed.inf.DronePath.PathNode;
 import uk.ac.ed.inf.Orders.Order;
 import uk.ac.ed.inf.Restaurants.Restaurant;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class DroneTest extends TestCase {
     private RestClient server = new RestClient<>("https://ilp-rest.azurewebsites.net/");
-    private Drone drone = new Drone(new LngLat(-3.190, 55.96));
+//    private Drone drone = new Drone(server, 0);
     private Restaurant[] restaurants = Restaurant.getRestaurantFromRestServer(server);
 
     public void testDeliverOrders() {
-        RestClient server = new RestClient<>("https://ilp-rest.azurewebsites.net/");
-        Drone drone = new Drone(new LngLat(-3.186874, 55.944494));
-        List<PathNode> path = drone.deliverOrders(server, "2023-01-01");
-        List<Point> finalPath = new ArrayList<>();
-        for (int i = 0; i < path.size(); i++) {
-            LngLat coordinate = path.get(i).getValue();
-            finalPath.add(Point.fromLngLat(coordinate.lng(), coordinate.lat()));
-        }
-
-        //         -- parsing the path to geoJSON format --
-//        Point appleton = Point.fromLngLat(new LngLat(-3.186874, 55.944494));
-//        Point end = Point.fromLngLat(vegan.lng(), vegan.lat());
-        LineString linePath = LineString.fromLngLats(finalPath);
-//        Geometry g1 = (Geometry) start;
-//        Geometry g2 = (Geometry) end;
-        Geometry g3 = (Geometry) linePath;
-        Feature[] features = new Feature[3];
-//        features[0] = Feature.fromGeometry(g1);
-//        features[1] = Feature.fromGeometry(g2);
-        features[2] = Feature.fromGeometry(g3);
-        FeatureCollection fc = FeatureCollection.fromFeatures(features);
-        System.out.println(fc.toJson());
+//        RestClient server = new RestClient<>("https://ilp-rest.azurewebsites.net/");
+//        Drone drone = new Drone(server);
+//        HashMap<Order, List<PathNode>> deliverOrders = drone.deliverOrders("2023-01-01");
+//        System.out.println(deliverOrders.size());
+//        List<PathNode> path = drone.getTotalFlightPath();
+//        System.out.println(path.size());
+//        List<Point> finalPath = new ArrayList<>();
+//        for (int i = 0; i < path.size(); i++) {
+//            LngLat coordinate = path.get(i).getValue();
+//            finalPath.add(Point.fromLngLat(coordinate.lng(), coordinate.lat()));
+//        }
+////
+//        //         -- parsing the path to geoJSON format --
+////        Point appleton = Point.fromLngLat(new LngLat(-3.186874, 55.944494));
+////        Point end = Point.fromLngLat(vegan.lng(), vegan.lat());
+//        LineString linePath = LineString.fromLngLats(finalPath);
+//////        Geometry g1 = (Geometry) start;
+//////        Geometry g2 = (Geometry) end;
+//        Geometry g3 = (Geometry) linePath;
+//        Feature[] features = new Feature[1];
+//////        features[0] = Feature.fromGeometry(g1);
+//////        features[1] = Feature.fromGeometry(g2);
+//        features[0] = Feature.fromGeometry(g3);
+//        FeatureCollection fc = FeatureCollection.fromFeatures(features);
+//        System.out.println(fc.toJson());
     }
 
     public void testTestDeliverOrders() {

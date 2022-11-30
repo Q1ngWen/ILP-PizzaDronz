@@ -52,6 +52,22 @@ public class RestClient<T> {
         return response;
     }
 
+    private boolean urlValidator(String url){
+        try {
+            new URL(url).toURI();
+            if (url.equals("") || url == null) {
+                url = DEFAULT_ENDPOINT;
+            }
+            if (!url.endsWith("/")) {
+                url += "/";
+            }
+            this.urlInstance = url;
+            return true;
+        } catch (MalformedURLException | URISyntaxException e) {
+            return false;
+        }
+    }
+
     public void download(String endpoint, String filename) {
         URL finalUrl = null;
 
@@ -79,21 +95,7 @@ public class RestClient<T> {
         }
     }
 
-    private boolean urlValidator(String url){
-        try {
-            new URL(url).toURI();
-            if (url.equals("") || url == null) {
-                url = DEFAULT_ENDPOINT;
-            }
-            if (!url.endsWith("/")) {
-                url += "/";
-            }
-            urlInstance = url;
-            return true;
-        } catch (MalformedURLException | URISyntaxException e) {
-            return false;
-        }
-    }
+
 
     // getters
 

@@ -92,6 +92,7 @@ public class PathGenerator {
                 else if (!lngLatsQueue.contains(next.getValue()) || tempFScore < next.getfScore()) {
                     intersectCentralAreaCount += tempCentralAreaCount;
                     next.setPrevious(current);
+                    next.setAngleToPrevious(d.getAngle());
                     next.setgScore(tempGScore);
                     next.setfScore(tempFScore);
 

@@ -1,9 +1,14 @@
 package uk.ac.ed.inf;
 
+import uk.ac.ed.inf.DronePath.CompassDirection;
 import uk.ac.ed.inf.DronePath.LngLat;
 import uk.ac.ed.inf.DronePath.PathNode;
 import uk.ac.ed.inf.Orders.Order;
 import uk.ac.ed.inf.Restaurants.Restaurant;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class mainTest {
     public static void main(String[] args){
@@ -12,12 +17,36 @@ public class mainTest {
 //        CentralArea centralAreaInstance = new CentralArea();
 //        centralAreaInstance.setCentralAreaCoordinates(server);
 //        LngLat[] centralAreas = centralAreaInstance.getCoordinates();
-//        LngLat meadowTop = new LngLat(-3.192473, 55.942617);
-//        LngLat kfc = new LngLat(-3.184319,55.946233);
-//        LngLat forestHill = new LngLat(-3.192473,55.946233);
-//        LngLat busStop = new LngLat(-3.184319,55.942617);
-//        LngLat cood1 = new LngLat(-3.190, 55.9442617);
-//        LngLat cood2 = new LngLat(-3.012837192, 55.9913912873);
+        LngLat meadowTop = new LngLat(-3.192473, 55.942617);
+        LngLat kfc = new LngLat(-3.184319,55.946233);
+        LngLat forestHill = new LngLat(-3.192473,55.946233);
+        LngLat busStop = new LngLat(-3.184319,55.942617);
+        LngLat cood1 = new LngLat(-3.190, 55.9442617);
+        LngLat cood2 = cood1.nextPosition(CompassDirection.NORTH_EAST);
+        System.out.println(cood1);
+        System.out.println(cood2.lng());
+
+        System.out.println(cood2.lat());
+        List<Integer> test = new ArrayList<>();
+        test.add(1);
+        test.add(2);
+        test.add(3);
+        test.add(4);
+        test.add(5);
+        test.add(6);
+        test.add(7);
+        test.add(8);
+        System.out.println(test);
+        List<Integer> test2 = test;
+//        Collections.reverse(test2);
+        System.out.println(test);
+        System.out.println(test2);
+        List<Integer> test3 = new ArrayList<>();
+        test3.addAll(test);
+        Collections.reverse(test2);
+        System.out.println(test);
+        System.out.println(test2);
+        System.out.println(test3);
 //        System.out.println(cood2.inArea(centralAreas));
 //        System.out.println(cood1.inArea(centralAreas));
 //        System.out.println(cood1.inCentralArea(server));

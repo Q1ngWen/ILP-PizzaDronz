@@ -191,7 +191,7 @@ public class OrderValidator {
             return null;
         }
         Order[] temp = null;
-        temp = (Order[]) server.deserialize("orders", Order[].class);
+        temp = (Order[]) server.deserialize("orders/" + date, Order[].class);
         orders = Stream.of(temp).collect(Collectors.toCollection(ArrayList::new));
         return this.orders;
     }

@@ -25,11 +25,9 @@ public class OrderValidatorTest extends TestCase {
     @Before
     public void setUp() {
         server = new RestClient<>(baseUrl);
-        validator = new OrderValidator();
-        nonValidatedOrders = validator.getNonValidatedOrders(server);
         restaurants = Restaurant.getRestaurantFromRestServer(server);
-        nonValidatedOrders = validator.getNonValidatedOrders(server);
-        validator.setUpValidator(restaurants);
+        validator = new OrderValidator(restaurants);
+        nonValidatedOrders = validator.getOrders(server).toArray(new Order[0]);
 
 //        assertNotNull(order1);
 //        assertNotNull(order2);
@@ -155,7 +153,7 @@ public class OrderValidatorTest extends TestCase {
     }
 
     public void testGetSpecificDayValidOrders() {
-        Order[] result = validator.getValidOrders(restaurants, nonValidatedOrders, "2023-01-02");
+        Order[] result = validator.getOrders(server).toArray(new Order[0]);
         for (int i = 0; i < result.length; i++) {
             System.out.println(result[i].getOrderNo());
             System.out.println(result[i].getOrderDate());

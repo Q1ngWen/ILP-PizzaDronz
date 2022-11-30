@@ -1,11 +1,13 @@
 package uk.ac.ed.inf.DronePath;
 
 import uk.ac.ed.inf.*;
+import uk.ac.ed.inf.Orders.Deliveries;
 import uk.ac.ed.inf.Orders.Order;
 import uk.ac.ed.inf.Orders.OrderOutcome;
 import uk.ac.ed.inf.Orders.OrderValidator;
 import uk.ac.ed.inf.Restaurants.Restaurant;
 
+import java.time.Clock;
 import java.util.*;
 
 public class Drone {
@@ -22,11 +24,12 @@ public class Drone {
     private PathGenerator pathGenerator;
     private HashMap<Restaurant, List<PathNode>> restaurantPath;
     private List<PathNode> totalFlightPath;
-    private int ticksSinceStartOfCalculation;
+    private Clock clock;
 
-    public Drone(RestClient server) {
+    public Drone(RestClient server, Clock clock) {
         // setting up and fetching all JSON data from REST server
-        server = server;
+        this.server = server;
+        this.clock = clock;
         centralAreaInstance = new CentralArea();
         centralAreaInstance.setCentralAreaCoordinates(server);
         noFlyZones=  NoFlyZone.getNoFlyZones(server);
@@ -43,7 +46,9 @@ public class Drone {
             PathNode restaurantNode = new PathNode(restaurant.getCoordinate());
             PathNode endNode = pathGenerator.AStarSearch(noFlyZones, centralAreaInstance, appletonTower, restaurantNode);
             List<PathNode> path = pathGenerator.getFlightPath(endNode);
+//            List<PathNode> pathToFrom = p
             restaurantPath.put(restaurant, path);
+            System.out.println(endNode.getValue());
         }
     }
 
@@ -51,13 +56,14 @@ public class Drone {
         // validate the orders and rearrange them to ascending by distance to appleton tower
         List<Order> orders = validator.getOrders(server);
         PriorityQueue<Order> sortedOrders = getSortedOrders(restaurants, orders.toArray(new Order[0]), restaurantPath);
-        System.out.println(sortedOrders.size());
+        System.out.println("Total orders taken: " + sortedOrders.size());
 
         // loop through list of orders till either order list is empty or max number of moves reached
         // generate path and add to list of path nodes
+        HashMap<List<Deliveries>, List<FlightPath>> deliveryPathTemp = new HashMap<>();
         HashMap<Order, List<PathNode>> deliveryPath = new HashMap<>();
 
-        while (!sortedOrders.isEmpty() && moveCount <= MAX_MOVES) {
+        while (!sortedOrders.isEmpty() || moveCount <= MAX_MOVES) {
             Order current = sortedOrders.poll();
             if (current == null) break;
             if (!validator.isValidOrder(restaurants, current)) {
@@ -75,24 +81,26 @@ public class Drone {
                 }
             }
         }
+        System.out.println("Total orders processed: " + deliveryPath.size());
         return deliveryPath;
     }
 
     public HashMap<Order, List<PathNode>> deliverOrders(String orderDate) {
         // validate the orders and rearrange them to ascending by distance to appleton tower
-        List<Order> orders = validator.getOrders(server);
+        List<Order> orders = validator.getOrders(server, orderDate);
         PriorityQueue<Order> sortedOrders = getSortedOrders(restaurants, orders.toArray(new Order[0]), restaurantPath);
-        System.out.println(sortedOrders.size());
+        System.out.println("Total orders taken: " + sortedOrders.size());
 
         // loop through list of orders till either order list is empty or max number of moves reached
         // generate path and add to list of path nodes
         HashMap<Order, List<PathNode>> deliveryPath = new HashMap<>();
 
-        while (!sortedOrders.isEmpty() && moveCount <= MAX_MOVES) {
+        while (!sortedOrders.isEmpty() || moveCount <= MAX_MOVES) {
             Order current = sortedOrders.poll();
             if (current == null) break;
             if (!validator.isValidOrder(restaurants, current)) {
                 deliveryPath.put(current, null);
+                continue;
             }
             Restaurant restaurant = current.getOrdersRestaurant(restaurants);
 
@@ -100,13 +108,22 @@ public class Drone {
             // generate path from appleton tower to restaurant
             if (restaurantPath.containsKey(restaurant)) {
                 List<PathNode> path = restaurantPath.get(restaurant);
+                System.out.println("current path moves " + (2*path.size()+2));
                 // check if theres enough moves left for the delivery and add if there is one
                 if (2*path.size() + 2 + moveCount <= MAX_MOVES){
                     deliveryPath = addingFlightPath(current, path, restaurants, deliveryPath);
+                } else {
+                    deliveryPath.put(current, null);
                 }
             }
         }
+        System.out.println("Total orders processed: " + deliveryPath.size());
         return deliveryPath;
+    }
+
+    // getter
+    public List<PathNode> getTotalFlightPath() {
+        return totalFlightPath;
     }
 
     // -- helper functions for delivering orders --
@@ -134,26 +151,32 @@ public class Drone {
 
     // function checks if the generated flight path is feasible - move count, etc. and adds it to the total flight path
     public HashMap<Order, List<PathNode>> addingFlightPath(Order order, List<PathNode> path, Restaurant[] restaurants, HashMap<Order, List<PathNode>> deliveryPath) {
-        if (2*path.size() + moveCount <= MAX_MOVES) {
-            List<PathNode> temp = new ArrayList<>();
-            // add the path from appleton to the restaurant
-            totalFlightPath.addAll(path);
-            temp.addAll(path);
-            // hover when drone picks up order from restaurant
-            totalFlightPath.add(path.get(path.size()-1));
-            temp.add(path.get(path.size()-1));
-            // add the path from restaurant back to appleton
-            Collections.reverse(path);
-            totalFlightPath.addAll(path);
-            temp.addAll(path);
-            // hover when user picks up order
-            totalFlightPath.add(path.get(path.size()-1));
-            temp.add(path.get(path.size()-1));
-            Collections.reverse(path);
-            order.setStatus(OrderOutcome.DELIVERED);
-            moveCount += 2* path.size() + 2;
-            deliveryPath.put(order, temp);
-        }
+        List<PathNode> temp = new ArrayList<>();
+        List<PathNode> result = new ArrayList<>();
+        temp.addAll(path);
+        // add the path from appleton to the restaurant
+        totalFlightPath.addAll(temp);
+        result.addAll(temp);
+        // hover when drone picks up order from restaurant
+        PathNode collectOrder = temp.get(temp.size()-1);
+        collectOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
+        totalFlightPath.add(collectOrder);
+        result.add(collectOrder);
+        // reverse the current path to get path back to appleton
+        Collections.reverse(temp);
+        temp.forEach(p -> p.setAngleToPrevious(CompassDirection.getOppositeDirection(p.getAngleToPrevious())));
+        // add the path from restaurant back to appleton
+        totalFlightPath.addAll(temp);
+        result.addAll(temp);
+        // hover when user picks up order
+        PathNode deliverOrder = temp.get(temp.size()-1);
+        deliverOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
+        totalFlightPath.add(deliverOrder);
+        result.add(deliverOrder);
+        order.setStatus(OrderOutcome.DELIVERED);
+        moveCount += 2* temp.size() + 2;
+        deliveryPath.put(order, result);
+
         return deliveryPath;
     }
 }
