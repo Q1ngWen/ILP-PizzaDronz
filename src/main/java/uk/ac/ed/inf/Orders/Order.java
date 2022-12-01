@@ -44,7 +44,7 @@ public class Order {
     }
 
     // setters
-    public void setStatus(OrderOutcome outcome) {
+    public void setOutcome(OrderOutcome outcome) {
         this.outcome = outcome;
     }
 

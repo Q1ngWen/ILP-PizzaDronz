@@ -1,8 +1,7 @@
 package uk.ac.ed.inf;
 
-import uk.ac.ed.inf.DronePath.CompassDirection;
-import uk.ac.ed.inf.DronePath.LngLat;
-import uk.ac.ed.inf.DronePath.PathNode;
+import com.mapbox.geojson.*;
+import uk.ac.ed.inf.DronePath.*;
 import uk.ac.ed.inf.Orders.Order;
 import uk.ac.ed.inf.Restaurants.Restaurant;
 
@@ -26,27 +25,6 @@ public class mainTest {
         System.out.println(cood1);
         System.out.println(cood2.lng());
 
-        System.out.println(cood2.lat());
-        List<Integer> test = new ArrayList<>();
-        test.add(1);
-        test.add(2);
-        test.add(3);
-        test.add(4);
-        test.add(5);
-        test.add(6);
-        test.add(7);
-        test.add(8);
-        System.out.println(test);
-        List<Integer> test2 = test;
-//        Collections.reverse(test2);
-        System.out.println(test);
-        System.out.println(test2);
-        List<Integer> test3 = new ArrayList<>();
-        test3.addAll(test);
-        Collections.reverse(test2);
-        System.out.println(test);
-        System.out.println(test2);
-        System.out.println(test3);
 //        System.out.println(cood2.inArea(centralAreas));
 //        System.out.println(cood1.inArea(centralAreas));
 //        System.out.println(cood1.inCentralArea(server));
@@ -81,40 +59,43 @@ public class mainTest {
 //        }
 
 //      -- generating a flight path --
-//        PathGenerator flightPath = new PathGenerator();
-//        LngLat domino = new LngLat(-3.1838572025299072, 55.94449876875712);
-//        LngLat civerinos = new LngLat(	-3.1912869215011597,55.945535152517735);
-//        LngLat endPoint = new LngLat(-3.202541470527649,55.943284737579376);
+        PathGenerator flightPath = new PathGenerator();
+        LngLat domino = new LngLat(-3.1838572025299072, 55.94449876875712);
+        LngLat civerinos = new LngLat(	-3.1912869215011597,55.945535152517735);
+        LngLat endPoint = new LngLat(-3.202541470527649,55.943284737579376);
         LngLat appletonTower = new LngLat(-3.186874, 55.944494);
         LngLat vegan = new LngLat(-3.202541470527649, 55.943284737579376);
         LngLat sodeberg = new LngLat(-3.1940174102783203, 55.94390696616939);
         PathNode source = new PathNode(appletonTower);
-        PathNode goal = new PathNode(vegan);
+        PathNode goal = new PathNode(domino);
 //        Drone drone = new Drone(source.getValue(), 0);
-//        PathNode position = flightPath.AStarSearch(noFlyZones, source, goal);
-//        System.out.println(goal.getParent());
-//        List<PathNode> path = PathGenerator.getPath(position);
-//        System.out.println(path.size());
-//        List<Point> finalPath = new ArrayList<Point>();
-//        for (int i = 0; i < path.size(); i++) {
-//            LngLat coordinate = path.get(i).getValue();
-//            finalPath.add(Point.fromLngLat(coordinate.lng(), coordinate.lat()));
-//            System.out.println(path.get(i).getValue());
-//        }
+        NoFlyZone[] noFlyZones=  NoFlyZone.getNoFlyZones(server);
+        CentralArea centralArea = new CentralArea();
+        centralArea.setCentralAreaCoordinates(server);
+        PathNode position = flightPath.AStarSearch(noFlyZones, centralArea, source, goal);
+        System.out.println(goal.getPrevious());
+        List<PathNode> path = flightPath.getFlightPath(position);
+        System.out.println(path.size());
+        List<Point> finalPath = new ArrayList<Point>();
+        for (int i = 0; i < path.size(); i++) {
+            LngLat coordinate = path.get(i).getValue();
+            finalPath.add(Point.fromLngLat(coordinate.lng(), coordinate.lat()));
+            System.out.println(path.get(i).getValue());
+        }
 
 //         -- parsing the path to geoJSON format --
-//        Point start = Point.fromLngLat(appletonTower.lng(), appletonTower.lat());
-//        Point end = Point.fromLngLat(civerinos.lng(), civerinos.lat());
-//        LineString linePath = LineString.fromLngLats(finalPath);
-//        Geometry g1 = (Geometry) start;
-//        Geometry g2 = (Geometry) end;
-//        Geometry g3 = (Geometry) linePath;
-//        Feature[] features = new Feature[3];
-//        features[0] = Feature.fromGeometry(g1);
-//        features[1] = Feature.fromGeometry(g2);
-//        features[2] = Feature.fromGeometry(g3);
-//        FeatureCollection fc = FeatureCollection.fromFeatures(features);
-//        System.out.println(fc.toJson());
+        Point start = Point.fromLngLat(appletonTower.lng(), appletonTower.lat());
+        Point end = Point.fromLngLat(domino.lng(), domino.lat());
+        LineString linePath = LineString.fromLngLats(finalPath);
+        Geometry g1 = (Geometry) start;
+        Geometry g2 = (Geometry) end;
+        Geometry g3 = (Geometry) linePath;
+        Feature[] features = new Feature[3];
+        features[0] = Feature.fromGeometry(g1);
+        features[1] = Feature.fromGeometry(g2);
+        features[2] = Feature.fromGeometry(g3);
+        FeatureCollection fc = FeatureCollection.fromFeatures(features);
+        System.out.println(fc.toJson());
 
         // order validation
 //        OrderValidator validator = new OrderValidator();

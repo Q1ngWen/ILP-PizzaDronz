@@ -198,36 +198,36 @@ public class OrderValidator {
 
     public boolean isValidOrder(Restaurant[] restaurants, Order order) {
         if (!isValidCardNumber(order.getCreditCardNumber())) {
-            order.setStatus(OrderOutcome.INVALID_CARD_NUMBER);
+            order.setOutcome(OrderOutcome.INVALID_CARD_NUMBER);
             System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
             return false;
         }
         if (!isValidCardExpiry(order.getCreditCardExpiry(), order.getOrderDate())) {
-            order.setStatus(OrderOutcome.INVALID_EXPIRY_DATE);
+            order.setOutcome(OrderOutcome.INVALID_EXPIRY_DATE);
             System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
             return false;
         }
         if (!isValidCvv(order.getCvv())) {
-            order.setStatus(OrderOutcome.INVALID_CVV);
+            order.setOutcome(OrderOutcome.INVALID_CVV);
             System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
             return false;
         }
         if (!isValidPizzaCount(order.getOrderItems())) {
-            order.setStatus(OrderOutcome.INVALID_PIZZA_COUNT);
+            order.setOutcome(OrderOutcome.INVALID_PIZZA_COUNT);
             System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
             return false;
         }
         if (!isValidPizzaItem(order.getOrderItems())) {
-            order.setStatus(OrderOutcome.INVALID_PIZZA_NOT_DEFINED);
+            order.setOutcome(OrderOutcome.INVALID_PIZZA_NOT_DEFINED);
             System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
             return false;
         }
         if (!isValidPizzaCombination(order.getOrderItems(), restaurants)) {
-            order.setStatus(OrderOutcome.INVALID_PIZZA_COMBINATION_MULTIPLE_SUPPLIERS);
+            order.setOutcome(OrderOutcome.INVALID_PIZZA_COMBINATION_MULTIPLE_SUPPLIERS);
             System.err.println("Order " + order.getOrderNo() + " is invalid: " + status);
             return false;
         }
-        order.setStatus(OrderOutcome.VALID_BUT_NOT_DELIVERED);
+        order.setOutcome(OrderOutcome.VALID_BUT_NOT_DELIVERED);
         return true;
     }
 
