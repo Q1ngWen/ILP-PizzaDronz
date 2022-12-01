@@ -2,12 +2,8 @@ package uk.ac.ed.inf;
 
 import uk.ac.ed.inf.DronePath.Drone;
 import uk.ac.ed.inf.DronePath.PathNode;
-import uk.ac.ed.inf.Orders.Order;
 import uk.ac.ed.inf.OutFiles.FileWriting;
 import uk.ac.ed.inf.OutFiles.Output;
-
-import java.time.Clock;
-import java.util.HashMap;
 import java.util.List;
 
 public class App {
@@ -19,15 +15,16 @@ public class App {
         System.out.println(date);
         System.out.println(baseUrl);
 
-        RestClient server = new RestClient<>(baseUrl);
+        RestClient server = new RestClient<>(baseUrl, date);
         Drone drone = new Drone(server);
         List<Output> outputList = drone.deliverOrders(date);
         List<PathNode> totalFlightPath = drone.getTotalFlightPath();
         FileWriting fileWriting = new FileWriting(totalFlightPath, date);
 
-        String droneGeoJson= fileWriting.getDronePathJson();
+        String droneGeoJson = fileWriting.getDronePathJson();
         String flightpathJson = fileWriting.serialise(Output.getFlightPaths(outputList));
-        String deliveriesJson = fileWriting.serialise(Output.getDeliveries(outputList));;
+        String deliveriesJson = fileWriting.serialise(Output.getDeliveries(outputList));
+        ;
         fileWriting.writeToFile(droneGeoJson, "drone");
         fileWriting.writeToFile(flightpathJson, "flightpath");
         fileWriting.writeToFile(deliveriesJson, "deliveries");

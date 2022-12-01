@@ -73,7 +73,7 @@ public class OrderValidator {
     }
 
     public boolean isValidCardExpiry(String cardExpiryString, String orderDateString) {
-        if (cardExpiryString == null || !isValidDate(orderDateString)) {
+        if (cardExpiryString == null) {
             this.status = OrderOutcome.INVALID_EXPIRY_DATE;
             return false;
         }
@@ -187,9 +187,6 @@ public class OrderValidator {
     }
 
     public List<Order> getOrders(RestClient server, String date) {
-        if (!isValidDate(date)) {
-            return null;
-        }
         Order[] temp = null;
         temp = (Order[]) server.deserialize("orders/" + date, Order[].class);
         orders = Stream.of(temp).collect(Collectors.toCollection(ArrayList::new));
@@ -228,37 +225,6 @@ public class OrderValidator {
             return false;
         }
         order.setOutcome(OrderOutcome.VALID_BUT_NOT_DELIVERED);
-        return true;
-    }
-
-//    public Order[] getValidOrders(Restaurant[] restaurants, Order[] orders, String date) {
-//        if (restaurants == null || !isValidDate(date)) {
-//            System.err.println("Invalid list of restaurants or date provided.");
-//            return null;
-//        }
-//        ArrayList<Order> nonValidatedFilteredOrders = new ArrayList<>();
-//        LocalDate dateFilter = LocalDate.parse(date);
-//        for (Order order : orders) {
-//            if (isValidDate(order.getOrderDate())) {
-//                LocalDate orderDate = LocalDate.parse(order.getOrderDate());
-//                if (orderDate.equals(dateFilter)) {
-//                    nonValidatedFilteredOrders.add(order);
-//                }
-//            }
-//        }
-//        Order[] validFilteredOrders = nonValidatedFilteredOrders.toArray(new Order[0]);
-//        return getValidOrders(restaurants, validFilteredOrders);
-//    }
-
-    // helper function that validates and converts the format of a date to YYYY-MM-DD
-    public boolean isValidDate(String date) {
-        try {
-            LocalDate.parse(date);
-        } catch (Exception e) {
-            System.err.println("Date String provided is in the wrong format or invalid.");
-            e.printStackTrace();
-            return false;
-        }
         return true;
     }
 

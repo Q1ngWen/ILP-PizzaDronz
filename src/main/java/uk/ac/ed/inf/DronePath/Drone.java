@@ -29,7 +29,6 @@ public class Drone {
         // setting up and fetching all JSON data from REST server
         this.server = server;
         this.ticksSinceStartOfCalculation = System.nanoTime();
-        System.out.println(ticksSinceStartOfCalculation);
         centralAreaInstance = new CentralArea();
         centralAreaInstance.setCentralAreaCoordinates(server);
         noFlyZones=  NoFlyZone.getNoFlyZones(server);
@@ -134,8 +133,6 @@ public class Drone {
         PriorityQueue<Order> orderPriorityQueue = new PriorityQueue<>(new Comparator<Order>() {
             @Override
             public int compare(Order o1, Order o2) {
-//                LngLat restaurant1 = o1.getOrdersRestaurant(restaurants).getCoordinate();
-//                LngLat restaurant2 = o2.getOrdersRestaurant(restaurants).getCoordinate();
                 double delivery1 = restaurantPath.get(o1.getOrdersRestaurant(restaurants)).size();
                 double delivery2 = restaurantPath.get(o2.getOrdersRestaurant(restaurants)).size();
                 if (delivery1 > delivery2) {
@@ -162,10 +159,10 @@ public class Drone {
             totalFlightPath.addAll(temp);
             result.addAll(temp);
             // hover when drone picks up order from restaurant
-            PathNode collectOrder = temp.get(temp.size()-1);
-            collectOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
-            totalFlightPath.add(collectOrder);
-            result.add(collectOrder);
+//            PathNode collectOrder = temp.get(temp.size()-1);
+//            collectOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
+//            totalFlightPath.add(collectOrder);
+//            result.add(collectOrder);
             // reverse the current path to get path back to appleton
             Collections.reverse(temp);
             temp.forEach(p -> p.setAngleToPrevious(CompassDirection.getOppositeDirection(p.getAngleToPrevious())));
@@ -173,10 +170,10 @@ public class Drone {
             totalFlightPath.addAll(temp);
             result.addAll(temp);
             // hover when user picks up order
-            PathNode deliverOrder = temp.get(temp.size()-1);
-            deliverOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
-            totalFlightPath.add(deliverOrder);
-            result.add(deliverOrder);
+//            PathNode deliverOrder = temp.get(temp.size()-1);
+//            deliverOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
+//            totalFlightPath.add(deliverOrder);
+//            result.add(deliverOrder);
             moveCount += 2* temp.size() + 2;
 
             // update status of order
