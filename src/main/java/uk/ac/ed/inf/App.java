@@ -6,16 +6,29 @@ import uk.ac.ed.inf.OutFiles.FileWriting;
 import uk.ac.ed.inf.OutFiles.Output;
 import java.util.List;
 
+/**
+ * The main class that is the entry point for executing the drone system.
+ */
 public class App {
-    public static void main(String[] args) {
-//        String date = args[0];
-//        String baseUrl = args[1];
-        String date = "2023-01-21";
-        String baseUrl = "https://ilp-rest.azurewebsites.net/";
-        System.out.println(date);
-        System.out.println(baseUrl);
 
-        RestClient server = new RestClient<>(baseUrl, date);
+    /**
+     * Java main method that allows system to be called.
+     * @param args 2 arguments that are input into the command line when system is called
+     *             parameter 1: date in YYYY-MM-DD format
+     *             Parameter 2: Base address of the ILP REST service. Eg. https://ilp-rest.azurewebsites.net/
+     */
+    public static void main(String[] args) {
+        if (args.length != 2) {
+            System.err.println("You must supply two parameters.");
+            System.err.println("Parameter 1: date in YYYY-MM-DD format");
+            System.err.println("Parameter 2: Base address of the ILP REST service \n " +
+                    "Eg. https://ilp-rest.azurewebsites.net/");
+            System.exit(1);
+        }
+        String date = args[0];
+        String baseUrl = args[1];
+
+        RestClient server = new RestClient(baseUrl, date);
         Drone drone = new Drone(server);
         List<Output> outputList = drone.deliverOrders(date);
         List<PathNode> totalFlightPath = drone.getTotalFlightPath();

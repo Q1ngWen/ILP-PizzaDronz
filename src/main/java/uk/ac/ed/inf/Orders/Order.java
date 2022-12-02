@@ -43,13 +43,20 @@ public class Order {
         this.orderItems = orderItems;
     }
 
-    // setters
+    /**
+     * @param outcome Sets the {@link OrderOutcome} of the current order.
+     */
     public void setOutcome(OrderOutcome outcome) {
         this.outcome = outcome;
     }
 
     // getters
     // get the coordinates of the restaurant the orders are from
+
+    /**
+     * @param restaurants List of {@link Restaurant} from the ILP REST server.
+     * @return Returns the {@link uk.ac.ed.inf.DronePath.LngLat} coordinates of the order's {@link Restaurant}.
+     */
     public Restaurant getOrdersRestaurant(Restaurant[] restaurants) {
         HashMap<String, Restaurant> menuRestaurant = new HashMap<>();
         for (Restaurant r : restaurants) {
@@ -67,34 +74,58 @@ public class Order {
         return null;
     }
 
+    /**
+     * @return {@link OrderOutcome} of the {@link Order}
+     */
     public OrderOutcome getOutcome() {
         return outcome;
     }
 
+    /**
+     * @return {@link String} of the unique alphanumeric value for a pizza order.
+     */
     public String getOrderNo() {
         return orderNo;
     }
 
+    /**
+     * @return {@link String} date the order was made.
+     */
     public String getOrderDate() {
         return orderDate;
     }
 
+    /**
+     * @return {@link String} of numbers making up the customers credit card number.
+     */
     public String getCreditCardNumber() {
         return creditCardNumber;
     }
 
+    /**
+     * @return {@link String} of credit card's expiry date in MM/YY format.
+     */
     public String getCreditCardExpiry() {
         return creditCardExpiry;
     }
 
+    /**
+     * @return {@link String} numbers making up a credit card's verification value.
+     */
     public String getCvv() {
         return cvv;
     }
 
+    /**
+     * @return {@link Integer} pence of the total price of the order, including the 100 pence delivery cost.
+     */
     public int getPriceTotalInPence() {
         return priceTotalInPence;
     }
 
+    /**
+     * @return List of {@link String} consisting of the pizza items ordered.
+     */
     public String[] getOrderItems() {
         return orderItems;
     }

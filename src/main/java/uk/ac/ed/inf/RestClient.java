@@ -1,24 +1,22 @@
 package uk.ac.ed.inf;
 
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import uk.ac.ed.inf.Restaurants.Restaurant;
 
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDate;
 
-public class RestClient<T> {
+
+/**
+ * This Class acts as a REST API to interact with the REST Server from the {@link URL} and {@link String} date provided.
+ */
+public class RestClient {
     private URL baseUrl;
 
     public RestClient(String baseUrl) {
         try {
+            //
             if (!baseUrl.endsWith("/")) {
                 baseUrl += "/";
             }
@@ -32,6 +30,13 @@ public class RestClient<T> {
         }
     }
 
+    /**
+     * Constructor for {@link RestClient} class that validates the inputs and terminates the system if invalid.
+     *
+     * @param baseUrl Base address of the ILP REST service input through the {@link App} class.
+     * @param date    Date of orders to be viewed and delivered input through the {@link App} class.
+     * @see RestClient#RestClient(String)
+     */
     public RestClient(String baseUrl, String date) {
         try {
             // check if the date entered is valid
@@ -58,6 +63,14 @@ public class RestClient<T> {
         }
     }
 
+    /**
+     * Converts a JSON string into a Java Object.
+     *
+     * @param endpoint REST-Service Endpoints to dynamically retrieve data
+     * @param tClass   General object class to store retrieved data.
+     * @param <T>      Generic type class that is parameterised over different types.
+     * @return Returns a list of data classes.
+     */
     public <T> T deserialize(String endpoint, Class<T> tClass) {
         URL finalUrl = null;
         T response = null;

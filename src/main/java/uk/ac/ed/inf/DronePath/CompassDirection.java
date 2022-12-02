@@ -26,16 +26,24 @@ public enum CompassDirection {
 
     private double angle;
 
+    /**
+     *
+     * @param angle Numeric representation of the direction that {@link CompassDirection} points.
+     */
     CompassDirection(double angle) {
         this.angle = angle;
     }
 
+    /**
+     *
+     * @return Returns the angle of the current {@link CompassDirection}.
+     */
     public double getAngle() {
         return angle;
     }
 
-    public static double getOppositeDirection(double angle) {
-        double result = (angle + 180) % 360;
-        return result;
-    }
+//    public static double getOppositeDirection(double angle) {
+//        double result = (angle + 180) % 360;
+//        return result;
+//    }
 }

@@ -1,5 +1,6 @@
 package uk.ac.ed.inf.Orders;
 
+import uk.ac.ed.inf.App;
 import uk.ac.ed.inf.Restaurants.MenuItem;
 import uk.ac.ed.inf.RestClient;
 import uk.ac.ed.inf.Restaurants.Restaurant;
@@ -12,6 +13,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ *{@link OrderValidator} helps check {@link Order} and validate their details.
+ */
 public class OrderValidator {
     private ArrayList<Order> orders;
     private OrderOutcome status;
@@ -19,7 +23,10 @@ public class OrderValidator {
     private Map<String, Restaurant> restaurantMenuName;
     private Map<String, Integer> restaurantMenuPrice;
 
-
+    /**
+     *
+     * @param restaurants List of {@link Restaurant} from the ILP REST Server.
+     */
     public OrderValidator(Restaurant[] restaurants) {
         if (restaurants == null) this.status = OrderOutcome.INVALID;
 
@@ -36,8 +43,15 @@ public class OrderValidator {
         }
     }
 
+    /**
+     *
+     * @param cardNumString {@link String} of numbers making up the customers credit card number.
+     * @return Returns true if the string is composed of only 16 digits for MC and Visa_16 and passes the Luhn algorithm
+     * @see <a href="https://www.groundlabs.com/blog/anatomy-of-a-credit-card/">Luhn Algorithm explained</a>
+     * @see <a href="https://www.bankrate.com/finance/credit-cards/what-do-the-numbers-on-your-credit-card-mean/#same">
+     *     Number of digits for MasterCards and Visa_16s</a>
+     */
     public boolean isValidCardNumber(String cardNumString) {
-        // credit card numbers are composed of 8-19 digits link: https://en.wikipedia.org/wiki/Payment_card_number
         // card should only have 16 digits and no other alphanumeric symbols
         String regex = "^[0-9]{16}$";
         Pattern p = Pattern.compile(regex);
@@ -62,7 +76,8 @@ public class OrderValidator {
             }
         }
 
-        // validating the check digits of the credit card number
+        // validating the calculated check digit against the card's actual check digit, which is the last digit in
+        // a credit card's number
         int checkDigit = (10 - sum % 10) % 10;
         if (checkDigit == cardNo[cardNo.length - 1]) {
             return true;
@@ -72,6 +87,13 @@ public class OrderValidator {
         }
     }
 
+    /**
+     *
+     * @param cardExpiryString {@link String} of credit card's expiry date in MM/YY format.
+     * @param orderDateString {@link String} date of orders to be viewed and delivered.
+     * @return Returns true if the expiry date provided is in YY/MM format and within bounds of a normal year, and if
+     * it doesnt contain additional special symbols.
+     */
     public boolean isValidCardExpiry(String cardExpiryString, String orderDateString) {
         if (cardExpiryString == null) {
             this.status = OrderOutcome.INVALID_EXPIRY_DATE;
@@ -101,6 +123,11 @@ public class OrderValidator {
         }
     }
 
+    /**
+     *
+     * @param cvvString {@link String} numbers making up a credit card's verification value.
+     * @return Returns true if the {@link String} only contains numbers.
+     */
     public boolean isValidCvv(String cvvString) {
         // regex to check for valid cvv numbers
         String regex = "^[0-9]{3}$";
@@ -113,6 +140,12 @@ public class OrderValidator {
         return m.matches();
     }
 
+    /**
+     *
+     * @param givenPrice {@link Integer} pence of the total price of the order, including the 100 pence delivery cost.
+     * @param orderedItems List of {@link String} of all items ordered.
+     * @return Returns true if the cost of the ordered items and delivery is equivalent to the given price.
+     */
     public boolean isValidTotalPrice(int givenPrice, String[] orderedItems) {
         if (givenPrice == 0 || orderedItems == null) {
             this.status = OrderOutcome.INVALID_TOTAL;
@@ -129,6 +162,11 @@ public class OrderValidator {
         return true;
     }
 
+    /**
+     *
+     * @param orderItems List of {@link String} of all items ordered.
+     * @return Returns true if there's a minimum of one or a maximum or four items ordered
+     */
     public boolean isValidPizzaCount(String[] orderItems) {
         if (orderItems == null || orderItems.length < 1 || orderItems.length > 4) {
             this.status = OrderOutcome.INVALID_PIZZA_COUNT;
@@ -136,6 +174,12 @@ public class OrderValidator {
         } else return true;
     }
 
+    /**
+     *
+     * @param orderItems List of {@link String} of all items ordered.
+     * @param restaurants List of {@link Restaurant} from the ILP REST Server.
+     * @return Returns true if the pizzas ordered in the order items are from the same restaurant.
+     */
     public boolean isValidPizzaCombination(String[] orderItems, Restaurant[] restaurants) {
         if (orderItems == null || restaurants == null) {
             this.status = OrderOutcome.INVALID_PIZZA_COMBINATION_MULTIPLE_SUPPLIERS;
@@ -150,14 +194,14 @@ public class OrderValidator {
         if (restaurantValidation.size() != 1) {
             this.status = OrderOutcome.INVALID_PIZZA_COMBINATION_MULTIPLE_SUPPLIERS;
             return false;
-//            try {
-//                throw new Exception(String.valueOf(OrderOutcome.INVALID_PIZZA_COMBINATION_MULTIPLE_SUPPLIERS));
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
         } else return true;
     }
 
+    /**
+     *
+     * @param orderItems List of {@link String} of all items ordered.
+     * @return Returns true if all the pizzas in order items exist in a {@link Restaurant}'s menu.
+     */
     public boolean isValidPizzaItem(String[] orderItems) {
         if (orderItems == null) {
             this.status = OrderOutcome.INVALID_PIZZA_NOT_DEFINED;
@@ -179,6 +223,11 @@ public class OrderValidator {
         return true;
     }
 
+    /**
+     *
+     * @param server {@link RestClient} allows data to be retrieved from the ILP REST Server.
+     * @return List of {@link Order} retrieved from the ILP REST Server.
+     */
     public List<Order> getOrders(RestClient server) {
         Order[] temp = null;
         temp = (Order[]) server.deserialize("orders", Order[].class);
@@ -186,6 +235,12 @@ public class OrderValidator {
         return this.orders;
     }
 
+    /**
+     *
+     * @param server {@link RestClient} allows data to be retrieved from the ILP REST Server.
+     * @param date Date of orders to be viewed and delivered.
+     * @return List of {@link Order} on the specific date, retrieved from the ILP REST Server.
+     */
     public List<Order> getOrders(RestClient server, String date) {
         Order[] temp = null;
         temp = (Order[]) server.deserialize("orders/" + date, Order[].class);
@@ -193,6 +248,12 @@ public class OrderValidator {
         return this.orders;
     }
 
+    /**
+     *
+     * @param restaurants List of {@link Restaurant} from the ILP REST Server.
+     * @param order current {@link Order}
+     * @return Returns true if the current order passes all validation checks on each individual attribute.
+     */
     public boolean isValidOrder(Restaurant[] restaurants, Order order) {
         if (!isValidCardNumber(order.getCreditCardNumber())) {
             order.setOutcome(OrderOutcome.INVALID_CARD_NUMBER);
@@ -228,7 +289,11 @@ public class OrderValidator {
         return true;
     }
 
-    // helper function that converts a string of integers to an array of integers
+    /**
+     *
+     * @param s {@link String} of {@link Integer}
+     * @return Converts it into a array of {@link Integer}.
+     */
     public int[] strToInt(String s) {
         if (s == null) this.status = OrderOutcome.INVALID;
 
@@ -241,12 +306,13 @@ public class OrderValidator {
     }
 
     // helper function that checks for the restaurant of the order
-    public Restaurant getOrdersRestaurant(String[] orderItems) {
-        for (String order : orderItems) {
-            if (restaurantMenuName.containsKey(order)) {
-                return restaurantMenuName.get(order);
-            }
-        }
-        return null;
-    }
+
+//    public Restaurant getOrdersRestaurant(String[] orderItems) {
+//        for (String order : orderItems) {
+//            if (restaurantMenuName.containsKey(order)) {
+//                return restaurantMenuName.get(order);
+//            }
+//        }
+//        return null;
+//    }
 }

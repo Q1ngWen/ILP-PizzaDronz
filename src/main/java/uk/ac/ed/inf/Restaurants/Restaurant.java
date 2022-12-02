@@ -15,10 +15,10 @@ public class Restaurant {
     private final MenuItem[] menu;
 
     /**
-     * @param name The name of the restaurant.
+     * @param name      The name of the restaurant.
      * @param longitude The longitude of the restaurant, measured in degrees.
-     * @param latitude The latitude of the restaurant, measured in degrees.
-     * @param menu The menu with an array pizzas for sale in the restaurant.
+     * @param latitude  The latitude of the restaurant, measured in degrees.
+     * @param menu      The menu with an array pizzas for sale in the restaurant.
      */
     public Restaurant(@JsonProperty("name") String name, @JsonProperty("longitude") double longitude,
                       @JsonProperty("latitude") double latitude, @JsonProperty("menu") MenuItem[] menu) {
@@ -34,7 +34,7 @@ public class Restaurant {
      */
     public static Restaurant[] getRestaurantFromRestServer(RestClient server) {
         Restaurant[] restaurants = null;
-        restaurants = (Restaurant[])server.deserialize("restaurants", Restaurant[].class);
+        restaurants = (Restaurant[]) server.deserialize("restaurants", Restaurant[].class);
         return restaurants;
 //        try {
 //            URL restaurantsUrl = new URL(server.getBaseUrl() + "restaurants");
@@ -60,6 +60,9 @@ public class Restaurant {
         return name;
     }
 
+    /**
+     * @return {@link LngLat} coordinate of the {@link Restaurant} location
+     */
     public LngLat getCoordinate() {
         return new LngLat(longitude, latitude);
     }

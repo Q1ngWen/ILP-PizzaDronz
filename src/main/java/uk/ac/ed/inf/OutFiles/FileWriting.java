@@ -2,33 +2,34 @@ package uk.ac.ed.inf.OutFiles;
 
 import com.google.gson.Gson;
 import com.mapbox.geojson.*;
-import uk.ac.ed.inf.DronePath.CompassDirection;
-import uk.ac.ed.inf.DronePath.FlightPath;
 import uk.ac.ed.inf.DronePath.LngLat;
 import uk.ac.ed.inf.DronePath.PathNode;
-import uk.ac.ed.inf.Orders.Deliveries;
-import uk.ac.ed.inf.Orders.Order;
-import uk.ac.ed.inf.Orders.OrderOutcome;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
+/**
+ * {@link FileWriting} class helps store functions that serialises and writes data produced to proper strings in files.
+ */
 public class FileWriting {
     private List<PathNode> totalFlightPath;
     private String date;
 
+    /**
+     * @param totalFlightPath List of {@link PathNode} containing all paths travelled when delivering orders for the day.
+     * @param date            {@link String} date entered when system was accessed.
+     */
     public FileWriting(List<PathNode> totalFlightPath, String date) {
         this.totalFlightPath = totalFlightPath;
         this.date = date;
     }
 
-
+    /**
+     * @return {@link String} of GeoJSON map which can be rendered <a href="https://geojson.io">here</a>.
+     */
     public String getDronePathJson() {
         // converting the path to geoJSON Points
         List<Point> finalPath = new ArrayList<>();
@@ -46,7 +47,11 @@ public class FileWriting {
         return result;
     }
 
-    // parses the list of objects to geoJson format
+    /**
+     * @param list List of object T to be parsed.
+     * @param <T>  Generic type class that is parameterised over different types.
+     * @return List of objects in JSON {@link String} format.
+     */
     public <T> String serialise(List<T> list) {
         Gson gson = new Gson();
         String result = "[";
@@ -56,6 +61,12 @@ public class FileWriting {
         return result + "]";
     }
 
+    /**
+     * Function produces a file from the JSON input.
+     *
+     * @param json     JSON {@link String} to be writen to a file.
+     * @param filename {@link String} name of the file.
+     */
     public void writeToFile(String json, String filename) {
         File file = new File("./resultfiles/" + filename + "-" + date);
         try {
