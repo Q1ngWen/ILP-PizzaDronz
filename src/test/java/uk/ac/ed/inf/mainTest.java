@@ -128,46 +128,30 @@ public class mainTest {
 
         // testing the flightpath generation
         PathNode node1 = new PathNode(new LngLat(3.0, 5.0));
-        node1.setAngleToPrevious(0);
         PathNode node2 = new PathNode(new LngLat(3.1, 5.1));
-        node2.setAngleToPrevious(0);
         PathNode node3 = new PathNode(new LngLat(3.2, 5.2));
-        node3.setAngleToPrevious(0);
         PathNode node4 = new PathNode(new LngLat(3.3, 5.3));
-        node4.setAngleToPrevious(0);
         PathNode node5 = new PathNode(new LngLat(3.4, 5.4));
-        node5.setAngleToPrevious(0);
-        PathNode node6 = new PathNode(new LngLat(3.5, 5.5));
-        PathNode node7 = new PathNode(new LngLat(3.6, 5.6));
-        PathNode node8 = new PathNode(new LngLat(3.7, 5.7));
-        PathNode node9 = new PathNode(new LngLat(3.8, 5.8));
 
         List<PathNode> path = new ArrayList<>(Arrays.asList(node1, node2, node3, node4, node5));
         Drone drone = new Drone(server);
-//        Output test = drone.generateOutput(order1, pathNodes);
+        Output test = drone.generateOutput(order1, path);
         List<PathNode> result = null;
-        if (path != null) {
-            List<PathNode> temp = new ArrayList<>();
-            result = new ArrayList<>();
-            temp.addAll(path);
-            // add the path from appleton to the restaurant
-            result.addAll(temp);
-            // hover when drone picks up order from restaurant
-            PathNode collectOrder = temp.get(temp.size() - 1);
-            collectOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
-            result.add(collectOrder);
-            // reverse the current path to get path back to appleton
-            Collections.reverse(temp);
-            temp.forEach(p -> p.setAngleToPrevious(CompassDirection.getOppositeDirection(p.getAngleToPrevious())));
-            // add the path from restaurant back to appleton
-            result.addAll(temp);
-            // hover when user picks up order
-            PathNode deliverOrder = temp.get(temp.size() - 1);
-            deliverOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
-            result.add(deliverOrder);
 
-            // update status of order
-            order1.setOutcome(OrderOutcome.DELIVERED);
+
+        long baseTimeLong = System.nanoTime();
+        int baseTimeInt = (int) System.nanoTime();
+        for (int i = 0; i < 100; i++) {
+            long currentLong = System.nanoTime();
+            int currentInt = (int) System.nanoTime();
+            long difLong = currentLong - baseTimeLong;
+            int difInt = currentInt - baseTimeInt;
+            System.out.println("Long base time: " + baseTimeLong);
+            System.out.println("Long current time: " + currentLong);
+            System.out.println("Long time dif: " + difLong);
+            System.out.println("Int base time: " + baseTimeInt);
+            System.out.println("Int current time: " + currentInt);
+            System.out.println("int time dif: " + difInt);
         }
 
     }

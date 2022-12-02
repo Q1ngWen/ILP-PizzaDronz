@@ -24,7 +24,7 @@ public class PathGeneratorTest extends TestCase {
     @Before
     public void setUp() {
         String baseUrl = "https://ilp-rest.azurewebsites.net/";
-        RestClient server = new RestClient(baseUrl);
+        RestClient server = new RestClient(baseUrl, "2023-02-02");
         noFlyZones = NoFlyZone.getNoFlyZones(server);
         centralArea = new CentralArea();
         centralArea.setCentralAreaCoordinates(server);

@@ -57,7 +57,7 @@ public class FileWriting {
     }
 
     public void writeToFile(String json, String filename) {
-        File file = new File(filename + "-" + date);
+        File file = new File("./resultfiles/" + filename + "-" + date);
         try {
             FileWriter fileWriter = new FileWriter(file);
             fileWriter.write(json);

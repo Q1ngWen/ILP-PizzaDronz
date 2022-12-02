@@ -10,7 +10,7 @@ public class App {
     public static void main(String[] args) {
 //        String date = args[0];
 //        String baseUrl = args[1];
-        String date = "2023-01-01";
+        String date = "2023-01-21";
         String baseUrl = "https://ilp-rest.azurewebsites.net/";
         System.out.println(date);
         System.out.println(baseUrl);
@@ -22,7 +22,7 @@ public class App {
         FileWriting fileWriting = new FileWriting(totalFlightPath, date);
 
         String droneGeoJson = fileWriting.getDronePathJson();
-        String flightpathJson = fileWriting.serialise(Output.getFlightPaths(outputList));
+        String flightpathJson = fileWriting.serialise(Output.getFlightPaths(outputList, drone.getBaseTickElapsed()));
         String deliveriesJson = fileWriting.serialise(Output.getDeliveries(outputList));
         ;
         fileWriting.writeToFile(droneGeoJson, "drone");

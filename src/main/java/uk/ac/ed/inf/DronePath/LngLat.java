@@ -20,10 +20,10 @@ public record LngLat(double lng, double lat) {
         }
 
         boolean result = false;
-        for (int i = 0, j = len-1; i < len; j = i++) {
+        for (int i = 0, j = len - 1; i < len; j = i++) {
             if (((coordinates[i].lng() > this.lng) != (coordinates[j].lng() >= lng)) &&
-                (lat <= (coordinates[j].lat() - coordinates[i].lat()) * (lng - coordinates[i].lng()) /
-                (coordinates[j].lng() - coordinates[i].lng()) + coordinates[i].lat())) {
+                    (lat <= (coordinates[j].lat() - coordinates[i].lat()) * (lng - coordinates[i].lng()) /
+                            (coordinates[j].lng() - coordinates[i].lng()) + coordinates[i].lat())) {
                 result = !result;
             }
         }
@@ -66,6 +66,13 @@ public record LngLat(double lng, double lat) {
         double angle = Math.toRadians(direction.getAngle());
         return new LngLat(this.lng + MOVE_DISTANCE * Math.cos(angle),
                 this.lat + MOVE_DISTANCE * Math.sin(angle));
+    }
+
+    public double getDirectionTo(LngLat cood) {
+        double difLng = cood.lng - this.lng;
+        double difLat = cood.lat - this.lat;
+        double angle = Math.round((Math.toDegrees(Math.atan2(difLat, difLng))) * 2) / 2.0;
+        return (angle + 360) % 360;
     }
 
     // function returns true if line segment p1q1 and p2q2 intersects

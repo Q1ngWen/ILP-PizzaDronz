@@ -23,12 +23,12 @@ public class Drone {
     private PathGenerator pathGenerator;
     private HashMap<Restaurant, List<PathNode>> restaurantPath;
     private List<PathNode> totalFlightPath;
-    private long ticksSinceStartOfCalculation;
+    private long baseTickElapsed;
 
     public Drone(RestClient server) {
         // setting up and fetching all JSON data from REST server
         this.server = server;
-        this.ticksSinceStartOfCalculation = System.nanoTime();
+        this.baseTickElapsed = System.nanoTime();
         centralAreaInstance = new CentralArea();
         centralAreaInstance.setCentralAreaCoordinates(server);
         noFlyZones=  NoFlyZone.getNoFlyZones(server);
@@ -152,28 +152,41 @@ public class Drone {
     public Output generateOutput(Order order, List<PathNode> path) {
         List<PathNode> result = null;
         if (path != null) {
-            List<PathNode> temp = new ArrayList<>();
-            result = new ArrayList<>();
-            temp.addAll(path);
-            // add the path from appleton to the restaurant
-            totalFlightPath.addAll(temp);
-            result.addAll(temp);
-            // hover when drone picks up order from restaurant
-//            PathNode collectOrder = temp.get(temp.size()-1);
-//            collectOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
-//            totalFlightPath.add(collectOrder);
-//            result.add(collectOrder);
-            // reverse the current path to get path back to appleton
-            Collections.reverse(temp);
-            temp.forEach(p -> p.setAngleToPrevious(CompassDirection.getOppositeDirection(p.getAngleToPrevious())));
-            // add the path from restaurant back to appleton
-            totalFlightPath.addAll(temp);
-            result.addAll(temp);
-            // hover when user picks up order
+//            List<PathNode> temp = new ArrayList<>();
+//            result = new ArrayList<>();
+//            temp.addAll(path);
+//            // add the path from appleton to the restaurant
+//            totalFlightPath.addAll(temp);
+//            result.addAll(temp);
+//            // hover when drone picks up order from restaurant
+////            PathNode collectOrder = temp.get(temp.size()-1);
+////            collectOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
+////            totalFlightPath.add(collectOrder);
+////            result.add(collectOrder);
+//            // reverse the current path to get path back to appleton
+//            Collections.reverse(temp);
+//            temp.forEach(p -> p.setAngleToPrevious(CompassDirection.getOppositeDirection(p.getAngleToPrevious())));
+//            // add the path from restaurant back to appleton
+//            totalFlightPath.addAll(temp);
+//            result.addAll(temp);
+////             hover when user picks up order
 //            PathNode deliverOrder = temp.get(temp.size()-1);
 //            deliverOrder.setAngleToPrevious(CompassDirection.NULL.getAngle());
 //            totalFlightPath.add(deliverOrder);
 //            result.add(deliverOrder);
+
+            List<PathNode> temp = new ArrayList<>();
+            temp.addAll(path);
+            result = new ArrayList<>();
+            // add the path from appleton to the restaurant
+            result.addAll(temp);
+            totalFlightPath.addAll(temp);
+            // reverse the apth to get the path back to appleton
+            Collections.reverse(temp);
+            // add the reversed path to appleton into the results
+            result.addAll(temp);
+            totalFlightPath.addAll(temp);
+
             moveCount += 2* temp.size() + 2;
 
             // update status of order
@@ -181,9 +194,12 @@ public class Drone {
         }
         
         // create output
-        long currentTicks = System.nanoTime() - this.ticksSinceStartOfCalculation;
-        Output output = new Output(order, currentTicks, result);
+        Output output = new Output(order, result);
 
         return output;
+    }
+
+    public long getBaseTickElapsed() {
+        return baseTickElapsed;
     }
 }

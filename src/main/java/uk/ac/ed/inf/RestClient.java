@@ -17,6 +17,21 @@ import java.time.LocalDate;
 public class RestClient<T> {
     private URL baseUrl;
 
+    public RestClient(String baseUrl) {
+        try {
+            if (!baseUrl.endsWith("/")) {
+                baseUrl += "/";
+            }
+            this.baseUrl = new URL(baseUrl);
+        } catch (MalformedURLException e) {
+            System.err.println("Url provided is invalid: " + baseUrl);
+            System.exit(2);
+        } catch (IOException e) {
+            System.err.println("Url provided is invalid: " + baseUrl);
+            System.exit(2);
+        }
+    }
+
     public RestClient(String baseUrl, String date) {
         try {
             // check if the date entered is valid

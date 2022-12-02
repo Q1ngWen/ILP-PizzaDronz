@@ -92,10 +92,10 @@ public class PathGenerator {
                 else if (!lngLatsQueue.contains(next.getValue()) || tempFScore < next.getfScore()) {
                     intersectCentralAreaCount += tempCentralAreaCount;
                     next.setPrevious(current);
-                    next.setAngleToPrevious(d.getAngle());
                     next.setgScore(tempGScore);
                     next.setfScore(tempFScore);
 
+                    // if next coordinate previously visited, remove it from queue to avoid entering a loop
                     if (lngLatsQueue.contains(next.getValue())) {
                         nodeQueue.remove(next);
                         lngLatsQueue.remove(next.getValue());

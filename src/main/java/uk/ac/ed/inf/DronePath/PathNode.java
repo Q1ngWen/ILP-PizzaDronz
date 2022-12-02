@@ -6,7 +6,8 @@ public class PathNode {
     private double gScore;
     private double hScore;
     private PathNode previous = null;
-    private double angleToPrevious;
+    private double angleToPrevious = 0;
+    private double angleToNext = 0;
 
 
     public PathNode(LngLat value) {
@@ -34,9 +35,7 @@ public class PathNode {
         this.previous = previous;
     }
 
-    public void setAngleToPrevious(double angleToPrevious) {
-        this.angleToPrevious = angleToPrevious;
-    }
+    public void setAngleToNext(double angleToNext) {this.angleToNext = angleToNext;}
 
     // getters
     public LngLat getValue() {
@@ -59,7 +58,4 @@ public class PathNode {
         return previous;
     }
 
-    public double getAngleToPrevious() {
-        return angleToPrevious;
-    }
 }

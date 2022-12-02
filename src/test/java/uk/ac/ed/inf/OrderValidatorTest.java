@@ -24,7 +24,7 @@ public class OrderValidatorTest extends TestCase {
 
     @Before
     public void setUp() {
-        server = new RestClient<>(baseUrl);
+        server = new RestClient<>(baseUrl, "2023-01-01");
         restaurants = Restaurant.getRestaurantFromRestServer(server);
         validator = new OrderValidator(restaurants);
         nonValidatedOrders = validator.getOrders(server).toArray(new Order[0]);

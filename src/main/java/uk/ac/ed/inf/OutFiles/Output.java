@@ -8,18 +8,14 @@ import uk.ac.ed.inf.Orders.Order;
 import uk.ac.ed.inf.Orders.OrderOutcome;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Output {
     private Order order;
-    private long ticksElasped;
     private List<PathNode> flightPath;
 
-    public Output(Order order, long ticksElasped, List<PathNode> flightPath) {
+    public Output(Order order, List<PathNode> flightPath) {
         this.order = order;
-        this.ticksElasped = ticksElasped;
         this.flightPath = flightPath;
     }
 
@@ -34,28 +30,46 @@ public class Output {
         return deliveries;
     }
 
-    public static List<FlightPath> getFlightPaths(List<Output> outputList) {
+    public static List<FlightPath> getFlightPaths(List<Output> outputList, long baseTickElapsed) {
         List<FlightPath> flightPaths = new ArrayList<>();
         int deliveredOrders = 0;
         for (Output output : outputList) {
             Order order = output.getOrder();
+
+            // if order wasn't delivered, no flight path to be added so continue to next iteration
             if (order.getOutcome() != OrderOutcome.DELIVERED) continue;
-            deliveredOrders +=1;
+            deliveredOrders += 1;
+
+            // initialise the path travelled and the turning point ( point close to restaurant)
             List<PathNode> path = output.getFlightPath();
-            for (int i = 0; i < path.size() - 1; i++) {
+            int turnPoint = path.size() / 2 ;
+            for (int i = 0; i < turnPoint-1; i++) {
                 LngLat from = path.get(i).getValue();
                 LngLat to = path.get(i + 1).getValue();
-//                if (path.get(i).getAngleToPrevious() == null) {
-//                    FlightPath flightPath = new FlightPath(
-//                            order.getOrderNo(), from.lng(), from.lat(), 0,
-//                            to.lng(), to.lat(), 0);
-//                    flightPaths.add(flightPath);
-//                }
                 FlightPath flightPath = new FlightPath(
-                        order.getOrderNo(), from.lng(), from.lat(), path.get(i).getAngleToPrevious(),
-                        to.lng(), to.lat(), (int) output.getTicksElasped());
+                        order.getOrderNo(), from.lng(), from.lat(), from.getDirectionTo(to),
+                        to.lng(), to.lat(), System.nanoTime() - baseTickElapsed);
                 flightPaths.add(flightPath);
             }
+
+            // add the drone hovering on the spot to pick up the order
+            LngLat restaurant = path.get(turnPoint).getValue();
+            FlightPath pickUp = new FlightPath(order.getOrderNo(), restaurant.lng(), restaurant.lat(), 0,
+                    restaurant.lng(), restaurant.lat(), System.nanoTime() - baseTickElapsed);
+            flightPaths.add(pickUp);
+
+            for (int i = turnPoint; i < path.size()-1; i++) {
+                LngLat from = path.get(i).getValue();
+                LngLat to = path.get(i + 1).getValue();
+                FlightPath flightPath = new FlightPath(
+                        order.getOrderNo(), from.lng(), from.lat(), from.getDirectionTo(to),
+                        to.lng(), to.lat(), System.nanoTime()- baseTickElapsed);
+                flightPaths.add(flightPath);
+            }
+            LngLat appleton = path.get(0).getValue();
+            FlightPath dropOff = new FlightPath(order.getOrderNo(), appleton.lng(), appleton.lat(), 0,
+                    appleton.lng(), appleton.lat(), System.nanoTime() - baseTickElapsed);
+            flightPaths.add(dropOff);
         }
         System.out.println("Total orders delivered: " + deliveredOrders);
         return flightPaths;
@@ -65,10 +79,6 @@ public class Output {
 
     public List<PathNode> getFlightPath() {
         return this.flightPath;
-    }
-
-    public long getTicksElasped() {
-        return this.ticksElasped;
     }
 
     public Order getOrder() {

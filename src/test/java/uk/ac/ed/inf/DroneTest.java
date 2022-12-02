@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DroneTest extends TestCase {
-    private RestClient server = new RestClient<>("https://ilp-rest.azurewebsites.net/");
+    private RestClient server = new RestClient<>("https://ilp-rest.azurewebsites.net/", "2023-01-01");
 //    private Drone drone = new Drone(server, 0);
     private Restaurant[] restaurants = Restaurant.getRestaurantFromRestServer(server);
 
