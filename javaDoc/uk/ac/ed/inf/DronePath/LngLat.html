@@ -92,7 +92,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance"><a href="https://docs.oracle.com/en/java/javase/18/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">java.lang.Record</a>
-<div class="inheritance">uk.ac.ed.inf.DronePath.LngLat</div>
+<div class="inheritance">uk.ac.ed.inf.Map.LngLat</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
@@ -162,7 +162,7 @@ loadScripts(document, 'script');</script>
  This is done with the axis crossing method via the Winding Number algorithm.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isIntersecting(uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat)" class="member-name-link">isIntersecting</a><wbr>(<a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p1,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isIntersecting(uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.DronePath.LngLat)" class="member-name-link">isIntersecting</a><wbr>(<a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p1,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;q1,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p2,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;q2)</code></div>
@@ -181,12 +181,12 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nextPosition(uk.ac.ed.inf.DronePath.CompassDirection)" class="member-name-link">nextPosition</a><wbr>(<a href="CompassDirection.html" title="enum class in uk.ac.ed.inf.DronePath">CompassDirection</a>&nbsp;direction)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onSegment(uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat)" class="member-name-link">onSegment</a><wbr>(<a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onSegment(uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.DronePath.LngLat)" class="member-name-link">onSegment</a><wbr>(<a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;q,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;r)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#orientation(uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat)" class="member-name-link">orientation</a><wbr>(<a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#orientation(uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.DronePath.LngLat)" class="member-name-link">orientation</a><wbr>(<a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;q,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;r)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -304,7 +304,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="isIntersecting(uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat)">
+<section class="detail" id="isIntersecting(uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.DronePath.LngLat)">
 <h3>isIntersecting</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isIntersecting</span><wbr><span class="parameters">(<a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p1,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;q1,
@@ -329,7 +329,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="onSegment(uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat)">
+<section class="detail" id="onSegment(uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.DronePath.LngLat)">
 <h3>onSegment</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">onSegment</span><wbr><span class="parameters">(<a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;q,
@@ -352,7 +352,7 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="orientation(uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat,uk.ac.ed.inf.DronePath.LngLat)">
+<section class="detail" id="orientation(uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.Map.LngLat,uk.ac.ed.inf.DronePath.LngLat)">
 <h3>orientation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">orientation</span><wbr><span class="parameters">(<a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;p,
  <a href="LngLat.html" title="class in uk.ac.ed.inf.DronePath">LngLat</a>&nbsp;q,

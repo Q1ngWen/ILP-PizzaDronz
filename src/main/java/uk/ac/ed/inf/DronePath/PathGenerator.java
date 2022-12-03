@@ -1,5 +1,9 @@
 package uk.ac.ed.inf.DronePath;
 
+import uk.ac.ed.inf.Map.CentralArea;
+import uk.ac.ed.inf.Map.LngLat;
+import uk.ac.ed.inf.Map.NoFlyZone;
+
 import java.util.*;
 import java.util.List;
 
@@ -7,7 +11,6 @@ import java.util.List;
  * {@link PathGenerator} helps search for the most optimal route to deliver orders.
  */
 public class PathGenerator {
-    private final double MOVE_DISTANCE = 0.00015;
     private final CompassDirection[] POSSIBLE_MOVES = {
             CompassDirection.NORTH, CompassDirection.NORTH_NORTH_EAST, CompassDirection.NORTH_EAST, CompassDirection.EAST_NORTH_EAST,
             CompassDirection.EAST, CompassDirection.EAST_SOUTH_EAST, CompassDirection.SOUTH_EAST, CompassDirection.SOUTH_SOUTH_EAST,
@@ -24,7 +27,7 @@ public class PathGenerator {
      * {@link uk.ac.ed.inf.Restaurants.Restaurant}.
      */
     public List<PathNode> getFlightPath(PathNode goal) {
-        List<PathNode> path = new ArrayList<PathNode>();
+        List<PathNode> path = new ArrayList<>();
         PathNode node = goal;
         while (node != null) {
             path.add(node);
@@ -49,20 +52,17 @@ public class PathGenerator {
      * explaination of the theory behind the algorithm.
      */
     public PathNode AStarSearch(NoFlyZone[] noFlyZones, CentralArea centralArea, PathNode source, PathNode goal) {
-        Set<LngLat> explored = new HashSet<LngLat>();
+        Set<LngLat> explored = new HashSet<>();
 //        HashMap<LngLat, PathNode> explored = new HashMap<LngLat, PathNode>();
         PathNode result = null;
 
-        Set<LngLat> lngLatsQueue = new HashSet<LngLat>();
-        PriorityQueue<PathNode> nodeQueue = new PriorityQueue<PathNode>(new Comparator<PathNode>() {
-            @Override
-            public int compare(PathNode node1, PathNode node2) {
-                if (node1.getfScore() > node2.getfScore()) {
-                    return 1;
-                } else if (node1.getfScore() < node2.getfScore()) {
-                    return -1;
-                } else return 0;
-            }
+        Set<LngLat> lngLatsQueue = new HashSet<>();
+        PriorityQueue<PathNode> nodeQueue = new PriorityQueue<>((node1, node2) -> {
+            if (node1.getfScore() > node2.getfScore()) {
+                return 1;
+            } else if (node1.getfScore() < node2.getfScore()) {
+                return -1;
+            } else return 0;
         });
 
         // cost from start
@@ -88,17 +88,20 @@ public class PathGenerator {
                 PathNode next = new PathNode(current.getValue().nextPosition(d));
 
                 // check if the next node and the path to next node is valid
-                int tempCentralAreaCount = isPathValid(centralArea, intersectCentralAreaCount, current, next);
-                if (!isPathValid(noFlyZones, current, next) || tempCentralAreaCount + intersectCentralAreaCount > 1) {
+                int tempCentralAreaCount = isPathValid(centralArea, current, next);
+                if (!isNodeValid(noFlyZones, next) || !isPathValid(noFlyZones, current, next) ||
+                        tempCentralAreaCount + intersectCentralAreaCount > 1) {
                     continue;
                 }
 
                 next.sethScore(goal.getValue());
+                double MOVE_DISTANCE = 0.00015;
                 double tempGScore = current.getgScore() + MOVE_DISTANCE;
                 double tempFScore = tempGScore + next.gethScore();
 
                 // if the child node has been evaluated and the newer f score is higher, skip
                 if (explored.contains(next.getValue()) && tempFScore >= next.getfScore()) {
+                    continue;
                 }
 
                 // else if child node is not in queue or newer f score is lower
@@ -128,11 +131,11 @@ public class PathGenerator {
      * @param noFlyZones List of {@link NoFlyZone} that restricts the possible valid paths.
      * @param current    Details of the current {@link PathNode}
      * @param next       {@link PathNode} of the next node to be validated
-     * @return Returns true if the path doesnt intersect through any {@link NoFlyZone}.
+     * @return Returns true if the path doesn't intersect through any {@link NoFlyZone}.
      */
     public boolean isPathValid(NoFlyZone[] noFlyZones, PathNode current, PathNode next) {
-        for (int i = 0; i < noFlyZones.length; i++) {
-            LngLat[] coordinates = noFlyZones[i].getCoordinates();
+        for (NoFlyZone noFlyZone : noFlyZones) {
+            LngLat[] coordinates = noFlyZone.getCoordinates();
             for (int j = 0; j < coordinates.length - 1; j++) {
                 if (current.getValue().isIntersecting(coordinates[j], coordinates[j + 1],
                         current.getValue(), next.getValue())) {
@@ -150,15 +153,15 @@ public class PathGenerator {
      * The function helps simplify checking if the possible path has left the {@link CentralArea}. And if so, whether
      * it enter the area again.
      *
-     * @param centralArea               {@link CentralArea} defines a polygon bounding are for the drone.
-     * @param intersectCentralAreaCount The current number of times the path has crossed the {@link CentralArea}.
-     * @param current                   Details of the current {@link PathNode}
-     * @param next                      {@link PathNode} of the next node to be validated
+     * @param centralArea {@link CentralArea} defines a polygon bounding are for the drone.
+     * @param current     Details of the current {@link PathNode}
+     * @param next        {@link PathNode} of the next node to be validated
      * @return Returns the number of times the next node would cross the {@link CentralArea} boundary.
      */
-    public int isPathValid(CentralArea centralArea, int intersectCentralAreaCount, PathNode current, PathNode next) {
+    public int isPathValid(CentralArea centralArea, PathNode current, PathNode next) {
         LngLat[] coordinates = centralArea.getCoordinates();
         int tempCount = 0;
+
         for (int i = 0; i < coordinates.length; i++) {
             if (i == coordinates.length - 1) {
                 if (current.getValue().isIntersecting(coordinates[i], coordinates[0],
@@ -173,14 +176,14 @@ public class PathGenerator {
         return tempCount;
     }
 
-    // function that checks if the next node is in a no fly zone
-//    public boolean isNodeValid(NoFlyZone[] noFlyZones, PathNode next) {
-//        for (int i = 0; i < noFlyZones.length; i++) {
-//            LngLat[] coordinates = noFlyZones[i].getCoordinates();
-//            if (next.getValue().inArea(coordinates)) {
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
+    // function that checks if the next node is in a no-fly zone
+    public boolean isNodeValid(NoFlyZone[] noFlyZones, PathNode next) {
+        for (NoFlyZone noFlyZone : noFlyZones) {
+            LngLat[] coordinates = noFlyZone.getCoordinates();
+            if (next.getValue().inArea(coordinates)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

@@ -24,14 +24,10 @@ public class OrderValidatorTest extends TestCase {
 
     @Before
     public void setUp() {
-        server = new RestClient<>(baseUrl, "2023-01-01");
+        server = new RestClient(baseUrl, "2023-01-01");
         restaurants = Restaurant.getRestaurantFromRestServer(server);
         validator = new OrderValidator(restaurants);
         nonValidatedOrders = validator.getOrders(server).toArray(new Order[0]);
-
-//        assertNotNull(order1);
-//        assertNotNull(order2);
-//        assertNotNull(order3);
 
         String pizzaItem1 = "Super Cheese";
         String pizzaItem2 = "All Shrooms";
@@ -103,7 +99,7 @@ public class OrderValidatorTest extends TestCase {
         // given total price is lower than actual
         assertFalse(validator.isValidTotalPrice(order2.getPriceTotalInPence(), order2.getOrderItems()));
         // given total price is higher than actual
-        assertFalse(validator.isValidTotalPrice(2000, order1.getOrderItems()));
+        assertFalse(validator.isValidTotalPrice(1511, order1.getOrderItems()));
         // given total price is invalid
         assertFalse(validator.isValidTotalPrice(order3.getPriceTotalInPence(), order3.getOrderItems()));
 
@@ -165,7 +161,7 @@ public class OrderValidatorTest extends TestCase {
 
     public void testStrToInt() {
         String validCardNum1 = "79927398713";
-        int[] result1 = {7,9,9,2,7,3,9,8,7,1,3};
+        int[] result1 = {7, 9, 9, 2, 7, 3, 9, 8, 7, 1, 3};
         assertEquals(result1[0], validator.strToInt(validCardNum1)[0]);
     }
 

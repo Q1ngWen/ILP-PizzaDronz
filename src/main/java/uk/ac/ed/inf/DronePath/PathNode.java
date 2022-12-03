@@ -1,10 +1,14 @@
 package uk.ac.ed.inf.DronePath;
 
+import uk.ac.ed.inf.Map.CentralArea;
+import uk.ac.ed.inf.Map.LngLat;
+import uk.ac.ed.inf.Map.NoFlyZone;
+
 /**
  * {@link PathNode} helps represent {@link LngLat} details like a graphical node. This helps link coordinates and
  * store heuristic values for {@link PathGenerator#AStarSearch(NoFlyZone[], CentralArea, PathNode, PathNode)}.
  *
- * @see <a href="https://www.sciencedirect.com/topics/engineering/graph-node">Here</a> for for further detail
+ * @see <a href="https://www.sciencedirect.com/topics/engineering/graph-node">Here</a> for further detail
  * about nodes in graph theories.
  */
 public class PathNode {

@@ -1,10 +1,8 @@
 package uk.ac.ed.inf.OutFiles;
 
 import uk.ac.ed.inf.DronePath.Drone;
-import uk.ac.ed.inf.DronePath.FlightPath;
-import uk.ac.ed.inf.DronePath.LngLat;
+import uk.ac.ed.inf.Map.LngLat;
 import uk.ac.ed.inf.DronePath.PathNode;
-import uk.ac.ed.inf.Orders.Deliveries;
 import uk.ac.ed.inf.Orders.Order;
 import uk.ac.ed.inf.Orders.OrderOutcome;
 
@@ -14,17 +12,12 @@ import java.util.List;
 /**
  * {@link Output} contains all the data necessary to produce the output files desired.
  */
-public class Output {
-    private Order order;
-    private List<PathNode> flightPath;
-
+public record Output(Order order, List<PathNode> flightPath) {
     /**
      * @param order      current {@link Order} and it's details.
      * @param flightPath List of {@link PathNode} making up the path travelled when the order is processed.
      */
-    public Output(Order order, List<PathNode> flightPath) {
-        this.order = order;
-        this.flightPath = flightPath;
+    public Output {
     }
 
     // -- functions that convert the output information into the desired class for outfiles--
@@ -36,7 +29,7 @@ public class Output {
     public static List<Deliveries> getDeliveries(List<Output> outputList) {
         List<Deliveries> deliveries = new ArrayList<>();
         for (Output output : outputList) {
-            Order order = output.getOrder();
+            Order order = output.order();
             Deliveries orderDelivery = new Deliveries(order.getOrderNo(), order.getOutcome().toString(),
                     order.getPriceTotalInPence());
             deliveries.add(orderDelivery);
@@ -53,14 +46,14 @@ public class Output {
         List<FlightPath> flightPaths = new ArrayList<>();
         int deliveredOrders = 0;
         for (Output output : outputList) {
-            Order order = output.getOrder();
+            Order order = output.order();
 
             // if order wasn't delivered, no flight path to be added so continue to next iteration
             if (order.getOutcome() != OrderOutcome.DELIVERED) continue;
             deliveredOrders += 1;
 
             // initialise the path travelled and the turning point ( point close to restaurant)
-            List<PathNode> path = output.getFlightPath();
+            List<PathNode> path = output.flightPath();
             int turnPoint = path.size() / 2;
             for (int i = 0; i < turnPoint - 1; i++) {
                 LngLat from = path.get(i).getValue();
@@ -99,14 +92,16 @@ public class Output {
     /**
      * @return List of {@link FlightPath}
      */
-    public List<PathNode> getFlightPath() {
+    @Override
+    public List<PathNode> flightPath() {
         return this.flightPath;
     }
 
     /**
      * @return {@link Order} details of current Output.
      */
-    public Order getOrder() {
+    @Override
+    public Order order() {
         return this.order;
     }
 }

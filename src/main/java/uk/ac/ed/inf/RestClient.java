@@ -14,28 +14,11 @@ import java.time.LocalDate;
 public class RestClient {
     private URL baseUrl;
 
-    public RestClient(String baseUrl) {
-        try {
-            //
-            if (!baseUrl.endsWith("/")) {
-                baseUrl += "/";
-            }
-            this.baseUrl = new URL(baseUrl);
-        } catch (MalformedURLException e) {
-            System.err.println("Url provided is invalid: " + baseUrl);
-            System.exit(2);
-        } catch (IOException e) {
-            System.err.println("Url provided is invalid: " + baseUrl);
-            System.exit(2);
-        }
-    }
-
     /**
      * Constructor for {@link RestClient} class that validates the inputs and terminates the system if invalid.
      *
      * @param baseUrl Base address of the ILP REST service input through the {@link App} class.
      * @param date    Date of orders to be viewed and delivered input through the {@link App} class.
-     * @see RestClient#RestClient(String)
      */
     public RestClient(String baseUrl, String date) {
         try {
@@ -53,7 +36,6 @@ public class RestClient {
             }
 
             this.baseUrl = new URL(baseUrl);
-            URL orders = new URL(baseUrl + "orders/" + date);
         } catch (MalformedURLException e) {
             System.err.println("Url provided is invalid: " + baseUrl);
             System.exit(2);

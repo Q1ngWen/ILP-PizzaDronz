@@ -1,6 +1,7 @@
 package uk.ac.ed.inf.Orders;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import uk.ac.ed.inf.Map.LngLat;
 import uk.ac.ed.inf.Restaurants.MenuItem;
 import uk.ac.ed.inf.Restaurants.Restaurant;
 
@@ -50,12 +51,9 @@ public class Order {
         this.outcome = outcome;
     }
 
-    // getters
-    // get the coordinates of the restaurant the orders are from
-
     /**
      * @param restaurants List of {@link Restaurant} from the ILP REST server.
-     * @return Returns the {@link uk.ac.ed.inf.DronePath.LngLat} coordinates of the order's {@link Restaurant}.
+     * @return Returns the {@link LngLat} coordinates of the order's {@link Restaurant}.
      */
     public Restaurant getOrdersRestaurant(Restaurant[] restaurants) {
         HashMap<String, Restaurant> menuRestaurant = new HashMap<>();
@@ -73,6 +71,8 @@ public class Order {
         }
         return null;
     }
+
+    // -- getters --
 
     /**
      * @return {@link OrderOutcome} of the {@link Order}

@@ -24,10 +24,9 @@ public enum CompassDirection {
     EAST_SOUTH_EAST(337.5),
     NULL(0);
 
-    private double angle;
+    private final double angle;
 
     /**
-     *
      * @param angle Numeric representation of the direction that {@link CompassDirection} points.
      */
     CompassDirection(double angle) {
@@ -35,15 +34,10 @@ public enum CompassDirection {
     }
 
     /**
-     *
      * @return Returns the angle of the current {@link CompassDirection}.
      */
     public double getAngle() {
         return angle;
     }
 
-//    public static double getOppositeDirection(double angle) {
-//        double result = (angle + 180) % 360;
-//        return result;
-//    }
 }

@@ -1,7 +1,7 @@
 package uk.ac.ed.inf.Restaurants;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import uk.ac.ed.inf.DronePath.LngLat;
+import uk.ac.ed.inf.Map.LngLat;
 import uk.ac.ed.inf.RestClient;
 
 /**
@@ -33,17 +33,9 @@ public class Restaurant {
      * @return Array of restaurants collaborating with the drone service.
      */
     public static Restaurant[] getRestaurantFromRestServer(RestClient server) {
-        Restaurant[] restaurants = null;
-        restaurants = (Restaurant[]) server.deserialize("restaurants", Restaurant[].class);
+        Restaurant[] restaurants;
+        restaurants = server.deserialize("restaurants", Restaurant[].class);
         return restaurants;
-//        try {
-//            URL restaurantsUrl = new URL(server.getBaseUrl() + "restaurants");
-//            restaurants = new ObjectMapper().readValue(restaurantsUrl, Restaurant[].class);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            System.exit(1);
-//        }
-//        return restaurants;
     }
 
     /**
