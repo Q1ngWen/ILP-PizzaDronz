@@ -28,6 +28,8 @@ public class FileWriting {
     }
 
     /**
+     * Function serialises total flight path generated into a geoJson string
+     *
      * @return {@link String} of GeoJSON map which can be rendered <a href="https://geojson.io">here</a>.
      */
     public String getDronePathJson() {
@@ -46,6 +48,8 @@ public class FileWriting {
     }
 
     /**
+     * Function converts any Java Object T into a JSON string
+     *
      * @param list List of object T to be parsed.
      * @param <T>  Generic type class that is parameterised over different types.
      * @return List of objects in JSON {@link String} format.

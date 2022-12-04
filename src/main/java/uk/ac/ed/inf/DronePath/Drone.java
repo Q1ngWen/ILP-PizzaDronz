@@ -101,6 +101,8 @@ public class Drone {
     }
 
     /**
+     * Getter function for total flight paths travelled
+     *
      * @return Returns a list of {@link PathNode} consisting of all paths taken when delivering {@link Order}.
      */
     public List<PathNode> getTotalFlightPath() {
@@ -110,6 +112,8 @@ public class Drone {
     // -- helper functions for delivering orders --
 
     /**
+     * Helper function for sorting a list of orders
+     *
      * @param restaurants    List of {@link Restaurant} from the ILP REST server.
      * @param orders         List of {@link Order} from the ILP REST server.
      * @param restaurantPath {@link HashMap} of {@link Restaurant} paired with the list of {@link PathNode} from
@@ -131,9 +135,9 @@ public class Drone {
         return orderPriorityQueue;
     }
 
-    // function that adds to total flight path and generates the output for an order
-
     /**
+     * Helper function that generates the output for an order and adds to total flight path
+     *
      * @param order {@link Order} to be processed.
      * @param path  List of {@link PathNode} from Appleton Tower to the order's {@link Restaurant}.
      * @return {@link Output} with the outcome of the {@link Order} processed.

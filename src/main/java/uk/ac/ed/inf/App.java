@@ -15,9 +15,9 @@ public class App {
     /**
      * Java main method that allows system to be called.
      *
-     * @param args 2 arguments that are input into the command line when system is called
-     *             parameter 1: date in YYYY-MM-DD format
-     *             Parameter 2: Base address of the ILP REST service. Eg. <a href="https://ilp-rest.azurewebsites.net/"></a>
+     * @param args 2 arguments that are input into the command line when system is called.
+     *             parameter 1 is a date in YYYY-MM-DD format.
+     *             Parameter 2 is a base address of the ILP REST service. Eg. <a href="https://ilp-rest.azurewebsites.net/">https://ilp-rest.azurewebsites.net/</a>
      */
     public static void main(String[] args) {
         if (args.length != 3) {

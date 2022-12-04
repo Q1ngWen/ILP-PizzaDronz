@@ -34,6 +34,7 @@ public enum CompassDirection {
     }
 
     /**
+     * Getter function for direction angle
      * @return Returns the angle of the current {@link CompassDirection}.
      */
     public double getAngle() {

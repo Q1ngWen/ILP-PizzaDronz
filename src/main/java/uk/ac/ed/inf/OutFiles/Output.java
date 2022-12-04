@@ -23,6 +23,8 @@ public record Output(Order order, List<PathNode> flightPath) {
     // -- functions that convert the output information into the desired class for outfiles--
 
     /**
+     * Function that converts {@link Output} details into {@link Deliveries}
+     *
      * @param outputList List of {@link Output} from the orders processed in a day.
      * @return List of {@link Deliveries} to be converted and writen to a file.
      */
@@ -38,6 +40,8 @@ public record Output(Order order, List<PathNode> flightPath) {
     }
 
     /**
+     * Function that converts {@link Output} details into {@link FlightPath}
+     *
      * @param outputList      List of {@link Output} from the orders processed in a day.
      * @param baseTickElapsed The {@link Drone} initiation start time.
      * @return List of {@link FlightPath} to be converted and writen to a file.

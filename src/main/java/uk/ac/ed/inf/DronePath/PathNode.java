@@ -67,6 +67,8 @@ public class PathNode {
     }
 
     /**
+     * Gets the {@link LngLat} value for the {@link PathNode}.
+     *
      * @return Returns the {@link LngLat} value.
      */
     public LngLat getValue() {
@@ -74,6 +76,8 @@ public class PathNode {
     }
 
     /**
+     * Gets the g-heuristic value for the {@link PathNode}.
+     *
      * @return Returns the g-heuristic score.
      */
     public double getgScore() {
@@ -81,6 +85,8 @@ public class PathNode {
     }
 
     /**
+     * Gets the f-heuristic value for the {@link PathNode}.
+     *
      * @return Returns the f-heuristic score.
      */
     public double getfScore() {
@@ -88,6 +94,8 @@ public class PathNode {
     }
 
     /**
+     * Gets the h-heuristic value for the {@link PathNode}.
+     *
      * @return Returns the h-heuristic score.
      */
     public double gethScore() {
@@ -95,6 +103,8 @@ public class PathNode {
     }
 
     /**
+     * Gets the previously visited {@link PathNode}.
+     *
      * @return Returns the previously visited {@link PathNode}.
      */
     public PathNode getPrevious() {

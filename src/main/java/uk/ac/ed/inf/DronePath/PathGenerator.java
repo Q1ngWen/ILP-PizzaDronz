@@ -22,6 +22,8 @@ public class PathGenerator {
     }
 
     /**
+     * Function that helps link explored nodes into a path
+     *
      * @param goal Last {@link PathNode} visited close to the {@link uk.ac.ed.inf.Restaurants.Restaurant}.
      * @return List of {@link PathNode} creating a route from Appleton Tower to the
      * {@link uk.ac.ed.inf.Restaurants.Restaurant}.
@@ -128,6 +130,8 @@ public class PathGenerator {
     // -- helper functions to help validate if paths and nodes are valid moves --
 
     /**
+     * function that checks if a move goes through no-fly zones
+     *
      * @param noFlyZones List of {@link NoFlyZone} that restricts the possible valid paths.
      * @param current    Details of the current {@link PathNode}
      * @param next       {@link PathNode} of the next node to be validated
@@ -145,9 +149,6 @@ public class PathGenerator {
         }
         return true;
     }
-
-    // function that checks if the path leaves the central area, and if so, checks
-    // if it re-enters the central area again
 
     /**
      * The function helps simplify checking if the possible path has left the {@link CentralArea}. And if so, whether
@@ -176,7 +177,13 @@ public class PathGenerator {
         return tempCount;
     }
 
-    // function that checks if the next node is in a no-fly zone
+    /**
+     * Function that checks if the next node is in a no-fly zone
+     *
+     * @param noFlyZones List of {@link NoFlyZone} that restricts the possible valid paths.
+     * @param next       {@link PathNode} of the next node to be validated
+     * @return Returns true if the next node isn't within any {@link NoFlyZone}.
+     */
     public boolean isNodeValid(NoFlyZone[] noFlyZones, PathNode next) {
         for (NoFlyZone noFlyZone : noFlyZones) {
             LngLat[] coordinates = noFlyZone.getCoordinates();
