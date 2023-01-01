@@ -88,7 +88,7 @@ public class Drone {
             if (restaurantPath.containsKey(restaurant)) {
                 List<PathNode> path = restaurantPath.get(restaurant);
                 // checking if it's a valid move
-                if (2 * path.size() + 2 + moveCount <= MAX_MOVES) {
+                if (2 * path.size() + moveCount <= MAX_MOVES) {
                     outputList.add(generateOutput(current, path));
                 } else {
                     // orders not delivered are given a null path
@@ -154,7 +154,7 @@ public class Drone {
             // add the reversed path to appleton into the results
             result.addAll(temp);
             totalFlightPath.addAll(temp);
-            moveCount += 2 * temp.size() + 2;
+            moveCount += 2 * temp.size();
 
             // update status of order
             order.setOutcome(OrderOutcome.DELIVERED);
