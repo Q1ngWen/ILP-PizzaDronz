@@ -38,10 +38,10 @@ public class RestClient {
             this.baseUrl = new URL(baseUrl);
         } catch (MalformedURLException e) {
             System.err.println("Url provided is invalid: " + baseUrl);
-            System.exit(2);
+//            System.exit(2);
         } catch (IOException e) {
             System.err.println("Url provided is invalid: " + baseUrl);
-            System.exit(2);
+//            System.exit(2);
         }
     }
 
