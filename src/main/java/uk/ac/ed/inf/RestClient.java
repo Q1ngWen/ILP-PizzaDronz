@@ -61,17 +61,17 @@ public class RestClient {
             finalUrl = new URL(baseUrl.toString() + endpoint);
         } catch (MalformedURLException e) {
             System.err.println("Url provided is invalid: " + baseUrl);
-            System.exit(2);
+//            System.exit(2);
         } catch (IOException e) {
             System.err.println("Url provided is invalid: " + baseUrl);
-            System.exit(2);
+//            System.exit(2);
         }
 
         try {
             response = new ObjectMapper().readValue(finalUrl, tClass);
         } catch (IOException e) {
             System.err.println("Server was unresponsive or URL entered was invalid, please try again.");
-            System.exit(2);
+//            System.exit(2);
         }
         return response;
     }
