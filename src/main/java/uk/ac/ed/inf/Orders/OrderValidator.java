@@ -106,7 +106,7 @@ public class OrderValidator {
         LocalDate orderDate = LocalDate.parse(orderDateString);
 
         // if the expiry date provided is not in YY/MM format or month is out of bounds
-        if (temp.length != 2 || 0 > mm || mm > 12) {
+        if (temp.length != 2 || 0 > mm || mm > 12 || temp[1].length() != 2) {
             this.status = OrderOutcome.INVALID_EXPIRY_DATE;
             return false;
         }

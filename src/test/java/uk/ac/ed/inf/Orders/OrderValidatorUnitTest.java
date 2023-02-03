@@ -64,87 +64,90 @@ public class OrderValidatorUnitTest extends TestCase {
         orderList1 = new Order[]{order1, order2};
     }
 
-    // test case 1: validating credit card number
+    // test suite 1: validating credit card number
     public void testIsValidCardNumber() {
-        // test condition 1: credit card number with 16 digits and correct check digit
+        // test case 1: credit card number with 16 digits and correct check digit
         assertTrue(validator.isValidCardNumber(order2.getCreditCardNumber()));
-        // test condition 2: credit card number less than 16 digits (not visa_16 or mc)
+        // test case 2: credit card number less than 16 digits (not visa_16 or mc)
         assertFalse(validator.isValidCardNumber(order1.getCreditCardNumber()));
-        // test condition 3: credit card number has symbols other than digits in the card number
+        // test case 3: credit card number has symbols other than digits in the card number
         assertFalse(validator.isValidCardNumber(order3.getCreditCardNumber()));
-        // test condition 4: credit card number longer than 16 digits
+        // test case 4: credit card number longer than 16 digits
         assertFalse(validator.isValidCardNumber(order4.getCreditCardNumber()));
-        // test condition 5: credit card number check digit fail Luhn algorithm
+        // test case 5: credit card number check digit fail Luhn algorithm
         assertFalse(validator.isValidCardNumber(order5.getCreditCardNumber()));
     }
 
-    // test case 2: validating credit card expiry date
+    // test suite 2: validating credit card expiry date
     public void testIsValidCardExpiry() {
-        // test condition 1: expiry date is after date of order
+        // test case 1: expiry date is after date of order
         assertTrue(validator.isValidCardExpiry(order1.getCreditCardExpiry(), order1.getOrderDate()));
-        // test condition 2: expiry date is before date of order
+        // test case 2: expiry date is before date of order
         assertFalse(validator.isValidCardExpiry(order2.getCreditCardExpiry(), order2.getOrderDate()));
-        // test condition 3: expiry date on the month of order (valid)
+        // test case 3: expiry date on the month of order (valid)
         assertTrue(validator.isValidCardExpiry(order3.getCreditCardExpiry(), order3.getOrderDate()));
+        // test case 4: expiry date is not in valid format
+        assertFalse(validator.isValidCardExpiry("-1/24", order4.getOrderDate()));
+        assertFalse(validator.isValidCardExpiry("01/2024", order4.getOrderDate()));
     }
 
-    // test case 3: validating the CVV of the credit card
+    // test suite 3: validating the CVV of the credit card
     public void testIsValidCvv() {
-        // test condition 1: cvv has 3 digits
+        // test case 1: cvv has 3 digits
         assertTrue(validator.isValidCvv(order1.getCvv()));
         assertTrue(validator.isValidCvv(order2.getCvv()));
-        // test condition 2: cvv has more than 3 digits
+        // test case 2: cvv has more than 3 digits
         assertFalse(validator.isValidCvv(order3.getCvv()));
-        // test condition 3: cvv has less than 3 digits
+        // test case 3: cvv has less than 3 digits
         assertFalse(validator.isValidCvv(order5.getCvv()));
-        // test condition 4: cvv has symbols
+        // test case 4: cvv has symbols
         assertFalse(validator.isValidCvv(order4.getCvv()));
     }
 
-    // test case 4: validating the total given price of the pizza orders
+    // test suite 4: validating the total given price of the pizza orders
     public void testIsValidTotalPrice() {
-        // test condition 1: total price given is equal to actual calculated total price
+        // test case 1: total price given is equal to actual calculated total price
         assertTrue(validator.isValidTotalPrice(order1.getPriceTotalInPence(), order1.getOrderItems()));
-        // test condition 2: given total price given is lower than the actual
+        // test case 2: total price given is lower than the actual
         assertFalse(validator.isValidTotalPrice(order2.getPriceTotalInPence(), order2.getOrderItems()));
-        // test condition 3: given total price given is higher than actual
+        // test case 3: total price given is higher than actual
         assertFalse(validator.isValidTotalPrice(2000, order1.getOrderItems()));
-        // test condition 4: given total price given is 0
+        // test case 4: total price given is 0
         assertFalse(validator.isValidTotalPrice(order3.getPriceTotalInPence(), order3.getOrderItems()));
     }
 
-    // test case 5: validating the total number of pizzas ordered is between 1 to 4
+    // test suite 5: validating the total number of pizzas ordered is between 1 to 4
     public void testIsValidPizzaCount() {
-        // test condition 1: 1 pizza ordered
+        // test case 1: 1 pizza ordered
         assertTrue(validator.isValidPizzaCount(order1.getOrderItems()));
-        // test condition 2: 4 pizzas ordered
+        // test case 2: 4 pizzas ordered
         assertTrue(validator.isValidPizzaCount(order2.getOrderItems()));
-        // test condition 3: between 1 to 4 pizzas ordered
+        // test case 3: between 1 to 4 pizzas ordered
         assertTrue(validator.isValidPizzaCount(order5.getOrderItems()));
-        // test condition 4: less than 1 pizza ordered
+        // test case 4: less than 1 pizza ordered
         assertFalse(validator.isValidPizzaCount(order3.getOrderItems()));
-        // test condition 5: more than 4 pizzas ordered
+        // test case 5: more than 4 pizzas ordered
         assertFalse(validator.isValidPizzaCount(order4.getOrderItems()));
     }
 
-    // test case 6: validating the type of pizzas ordered
+    // test suite 6: validating the pizza item ordered
     public void testIsValidPizzaCombination() {
-        // test condition 1: all pizzas ordered are from the same singular restaurant
+        // test case 1: all pizzas ordered are from the same singular restaurant
         assertTrue(validator.isValidPizzaCombination(order1.getOrderItems(), restaurants));
         assertTrue(validator.isValidPizzaCombination(order2.getOrderItems(), restaurants));
-        // test condition 2: empty pizza orders
+        // test case 2: empty pizza orders
         assertFalse(validator.isValidPizzaCombination(order3.getOrderItems(), restaurants));
-        // test condition 3: pizzas ordered are from more than 1 restaurant
+        // test case 3: pizzas ordered are from more than 1 restaurant
         assertFalse(validator.isValidPizzaCombination(order4.getOrderItems(), restaurants));
     }
 
-    // test case 7: validating the pizza item ordered
+    // test suite 7: validating the type of pizzas ordered
     public void testIsValidPizzaItem() {
-        // test condition 1: pizzas ordered exist in any restaurant's menu
+        // test case 1: pizzas ordered exist in any restaurant's menu
         assertTrue(validator.isValidPizzaItem(order1.getOrderItems()));
         assertTrue(validator.isValidPizzaItem(order2.getOrderItems()));
         assertTrue(validator.isValidPizzaItem(order3.getOrderItems()));
-        // test condition 2: pizzas ordered do not exist in any restaurant's menu
+        // test case 2: pizzas ordered do not exist in any restaurant's menu
         assertFalse(validator.isValidPizzaItem(order5.getOrderItems()));
     }
 }

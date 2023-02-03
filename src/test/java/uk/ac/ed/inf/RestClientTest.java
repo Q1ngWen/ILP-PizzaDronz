@@ -23,10 +23,10 @@ public class RestClientTest extends TestCase {
         System.setErr(new PrintStream(errorContent));
     }
 
-    // test case 1: checking the validation of the base URL for the string input
+    // test suite 1: checking the validation of the base URL for the string input
     // url validity: https://www.w3.org/TR/2011/WD-html5-20110525/urls.html
     public void testUrlValidation() {
-        // test condition 1: input is a valid URI
+        // test case 1: input is a valid URI
         url = "https://ilp-rest.azurewebsites.net/centralarea";
         assertNotNull(new RestClient(url, date));
         assertFalse(errorContent.toString().contains(errorMessage + url));
@@ -34,30 +34,30 @@ public class RestClientTest extends TestCase {
         assertNotNull(new RestClient(url, date));
         assertFalse(errorContent.toString().contains(errorMessage + url));
 
-        // test condition 2: input is an empty string
+        // test case 2: input is an empty string
         url = "";
         new RestClient(url, date);
         assertTrue(errorContent.toString().contains(errorMessage + url));
 
-        // test condition 3: input contains white spaces around the URL
+        // test case 3: input contains white spaces around the URL
         url = "   https://ilp-rest.azurewebsites.net/centralarea  ";
         assertNotNull(new RestClient(url, date));
         assertFalse(errorContent.toString().contains(errorMessage + url));
 
-        // test condition 4: input is an invalid URI
+        // test case 4: input is an invalid URI
         url = "google/com.com/https://";
         new RestClient(url, date);
         assertTrue(errorContent.toString().contains(errorMessage + url));
 
-        // test condition 5: input is a valid IRI reference
+        // test case 5: input is a valid IRI reference
         url = "https://ilp-rest.azurewebsites.net/bounding-box.geojson";
         assertNotNull(new RestClient(url, date));
         assertFalse(errorContent.toString().contains(errorMessage + url));
     }
 
-    // test case 2: checking if the data fetched from the REST API is valid, assuming the url has been validated
+    // test suite 2: checking the data fetched from the REST server, assuming the url has been validated
     public void testDeserialize() {
-        // test condition 1: server was responsive and data can be fetched from the server
+        // test case 1: server was responsive and data can be fetched from the server
         url = "https://ilp-rest.azurewebsites.net/";
         server = new RestClient(url, date);
         CentralArea centralArea = new CentralArea();
@@ -69,13 +69,13 @@ public class RestClientTest extends TestCase {
         assertEquals(centralAreaPoints[2].lng(), -3.184319);
         assertEquals(centralAreaPoints[2].lat(), 55.942617);
 
-        // test condition 2: server was unresponsive
+        // test case 2: server was unresponsive
         url = "https://stefanbirkner.github.com/";
         server = new RestClient(url, date);
         String[] unresponsive = server.deserialize("system-rules/", String[].class);
         assertTrue(errorContent.toString().contains("Server was unresponsive"));
 
-        // test condition 3: no data could be fetched from the URL
+        // test case 3: no data could be fetched from the URL
         url = "https://www.google.com";
         server = new RestClient(url, date);
         String[] fetchError = server.deserialize("system-rules/", String[].class);
