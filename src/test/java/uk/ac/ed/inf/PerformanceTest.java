@@ -7,11 +7,14 @@ import uk.ac.ed.inf.OutFiles.Output;
 
 import java.util.List;
 
-public class AppTest extends TestCase {
+public class PerformanceTest extends TestCase {
     private final String baseUrl = "https://ilp-rest.azurewebsites.net/";
 
+    // test case: verifying response time of system is under 60 seconds
     public void testResponseTime() {
         String date = "2023-04-04";
+
+        // system's execution start time is recorded
         long start = System.currentTimeMillis();
         RestClient server = new RestClient(baseUrl, date);
         Drone drone = new Drone(server);
@@ -25,7 +28,9 @@ public class AppTest extends TestCase {
         fileWriting.writeToFile(flightpathJson, "flightpath", "json");
         fileWriting.writeToFile(deliveriesJson, "deliveries", "json");
 
+        // system's execution end time is recorded
         long finish = System.currentTimeMillis();
+        // system's total execution time is calculated
         long timeElapsed = finish - start;
         System.out.println(timeElapsed);
         assertTrue(timeElapsed <= 60000);
